@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://data/private/textures/space-sprite.png" type="Texture" id=1]
+
+[node name="Asteroid" type="Node2D"]
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+collision_layer = 16
+collision_mask = 31
+mode = 1
+mass = 100.0
+
+[node name="Sprite" type="Sprite" parent="RigidBody2D"]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 896, 512, 128, 128 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RigidBody2D"]
+polygon = PoolVector2Array( 27.7449, -18.0057, 31.5204, -7.62304, 37.1836, -1.72382, 38.2455, 10.4286, 33.2901, 21.7551, 22.4356, 28.3622, -3.87492, 28.7161, -16.1453, 43.2282, -29.7135, 34.2614, -38.3263, 22.463, -31.6012, 4.29338, -31.7192, -19.3035, -30.5394, -28.9782, -24.5222, -30.276, -4.58283, -29.6861, 0.608475, -33.3436, 11.935, -33.3436, 26.919, -23.4329 )

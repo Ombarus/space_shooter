@@ -1,0 +1,11 @@
+.import
+*tmp*
+/logs.txt
+/secret
+/data/private
+*.png~
+*~
+SolarRogue*.exe
+*.apk
+*.x86_64
+*-autosave*

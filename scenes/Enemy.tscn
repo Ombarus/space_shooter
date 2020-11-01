@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripts/Enemy.gd" type="Script" id=1]
+[ext_resource path="res://data/private/textures/space-sprite.png" type="Texture" id=2]
+
+[node name="Enemy" type="KinematicBody2D"]
+collision_mask = 31
+script = ExtResource( 1 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+rotation = 1.5708
+polygon = PoolVector2Array( -20.7956, 36.0876, -31.5051, 1.91228, -27.7253, -3.59989, -28.5128, -12.8918, -33.2375, -15.2541, -30.2452, -19.3489, -32.9226, -22.8137, -32.6076, -28.7983, -17.961, -34.468, -16.3861, -27.3809, -9.29907, -28.7984, -6.46426, -34.9405, 5.50498, -35.5705, 11.8046, -28.9559, 15.8994, -29.5859, 16.6868, -34.7831, 33.2233, -28.3261, 32.9083, -21.3965, 29.4435, -18.8766, 33.0658, -17.3017, 28.4986, -11.6321, 28.9711, -1.23775, 31.3335, 2.38452, 20.3093, 36.7174, 15.4271, 29.7879, 10.8599, 42.2296, 2.19797, 41.9146, 1.56798, 34.5126, -2.36926, 35.3001, -2.52673, 42.8596, -10.8737, 41.9147, -16.8584, 25.8507 )
+
+[node name="MC" type="Sprite" parent="."]
+rotation = 1.5708
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 640, 256, 128, 128 )
+
+[node name="gun" type="Node2D" parent="."]
+position = Vector2( 100, 0 )

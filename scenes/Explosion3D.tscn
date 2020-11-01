@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://data/private/sounds/sfx/explosion/sfx_exp_odd7.wav" type="AudioStream" id=1]
+[ext_resource path="res://scripts/Explosion3D.gd" type="Script" id=2]
+
+[sub_resource type="SpatialMaterial" id=1]
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id=2]
+material = SubResource( 1 )
+radius = 0.3
+height = 0.6
+radial_segments = 8
+rings = 8
+
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 0.990909 ), 0.0, 0.0, 0, 0, Vector2( 0.971053, 0.172727 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=4]
+offsets = PoolRealArray( 0, 0.42577, 1 )
+colors = PoolColorArray( 0, 0.601563, 1, 1, 1, 0.914063, 0, 1, 1, 0, 0, 1 )
+
+[node name="Explosion3D" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="CPUParticles" type="CPUParticles" parent="."]
+amount = 200
+lifetime = 0.5
+explosiveness = 0.63
+mesh = SubResource( 2 )
+flag_align_y = true
+direction = Vector3( 100, 0, 0 )
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 5.11
+scale_amount_curve = SubResource( 3 )
+color_ramp = SubResource( 4 )
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 48, 0 )
+stream = ExtResource( 1 )
+unit_size = 6.6
+autoplay = true

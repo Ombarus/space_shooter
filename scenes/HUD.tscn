@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://data/private/textures/pointer.png" type="Texture" id=1]
+[ext_resource path="res://scripts/HUD.gd" type="Script" id=2]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource( 2 )
+
+[node name="SafeArea" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ship_pointer" type="TextureRect" parent="SafeArea"]
+margin_right = 40.0
+margin_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bar" type="ColorRect" parent="SafeArea"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = -60.0
+margin_right = 520.0
+margin_bottom = -20.0
+color = Color( 0.372549, 0.372549, 0.372549, 0.764706 )
+
+[node name="hp" type="ColorRect" parent="SafeArea"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = -60.0
+margin_right = 50.0
+margin_bottom = -20.0
+color = Color( 0.996078, 0.0705882, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
