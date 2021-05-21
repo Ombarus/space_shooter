@@ -8,9 +8,20 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Resource",
+"class": "NoiseSettings",
+"language": "GDScript",
+"path": "res://scripts/NoiseSettings.gd"
+}, {
+"base": "Resource",
+"class": "ShapeGenerator",
+"language": "GDScript",
+"path": "res://scripts/ShapeGenerator.gd"
+} ]
 _global_script_class_icons={
-
+"NoiseSettings": "",
+"ShapeGenerator": ""
 }
 
 [application]
@@ -83,7 +94,7 @@ full_screen={
 
 [rendering]
 
-quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
+quality/filters/msaa=2
 environment/default_environment="res://default_env.tres"

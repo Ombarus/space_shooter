@@ -4,7 +4,6 @@
 [ext_resource path="res://scripts/Remapper.gd" type="Script" id=2]
 [ext_resource path="res://data/private/textures/scout_ref.png" type="Texture" id=3]
 
-
 [node name="Remapper" type="Spatial"]
 script = ExtResource( 2 )
 original_texture = ExtResource( 3 )
@@ -22,6 +21,7 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 texture = ExtResource( 3 )

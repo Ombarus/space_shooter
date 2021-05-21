@@ -6,6 +6,8 @@ var laser = preload("res://scenes/Gauss3D.tscn")
 
 var should_fire = false
 
+var attractor := []
+
 var i := 0
 
 func _unhandled_input(event):
@@ -34,7 +36,13 @@ func _physics_process(delta):
 		apply_force.z += base_str
 
 	#apply_force = apply_force.rotated(rotation)
-	var motion : Vector3 = velocity + apply_force
+	
+	var gravity = Vector3.ZERO
+	var attractors = get_tree().get_nodes_in_group("attractors")
+	for attractor in attractors:
+		gravity += attractor.get_gravity(self) * delta
+	
+	var motion : Vector3 = velocity + apply_force + gravity
 	velocity = move_and_slide(motion, Vector3(0.0, 1.0, 0.0))
 	
 	velocity.x = clamp(velocity.x, -100.0, 100.0)

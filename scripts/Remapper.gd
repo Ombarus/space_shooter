@@ -27,7 +27,6 @@ func remap():
 	orig_im.lock()
 	
 	var mesh : Mesh = _mesh_instance.mesh
-	var faces : PoolVector3Array = mesh.get_faces()
 	
 	print("surface count = " + str(mesh.get_surface_count()))
 	for surface_id in mesh.get_surface_count():
