@@ -1,22 +1,113 @@
-[gd_resource type="Resource" load_steps=5 format=2]
+[gd_resource type="Resource" load_steps=23 format=2]
 
-[ext_resource path="res://scripts/ShapeGenerator.gd" type="Script" id=1]
+[ext_resource path="res://scripts/pcg_planet/ShapeGenerator.gd" type="Script" id=1]
 [ext_resource path="res://scripts/NoiseSettings.gd" type="Script" id=2]
+[ext_resource path="res://data/PlanetMaterial.tres" type="Material" id=3]
+[ext_resource path="res://scripts/pcg_planet/Biome.gd" type="Script" id=4]
 
 [sub_resource type="OpenSimplexNoise" id=1]
 octaves = 5
-period = 9.1
+period = 0.5
 
-[sub_resource type="Resource" id=2]
+[sub_resource type="Gradient" id=2]
+colors = PoolColorArray( 0.529938, 0.829344, 0.898438, 1, 1, 1, 1, 1 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="Resource" id=4]
+script = ExtResource( 4 )
+gradient = SubResource( 3 )
+startHeight = -0.002
+tint = Color( 0, 0, 0, 1 )
+tintPercent = 0.0
+
+[sub_resource type="Gradient" id=5]
+offsets = PoolRealArray( 0.194805, 0.246753, 0.411255, 0.515152, 0.744589, 0.917749 )
+colors = PoolColorArray( 0.247059, 0.556863, 0.8, 1, 0.622845, 0.636719, 0.383026, 1, 0.142487, 0.628906, 0.207089, 1, 0.189514, 0.421875, 0.220374, 1, 0.366842, 0.364609, 0.395508, 1, 1, 1, 1, 1 )
+
+[sub_resource type="GradientTexture" id=6]
+gradient = SubResource( 5 )
+
+[sub_resource type="Resource" id=7]
+script = ExtResource( 4 )
+gradient = SubResource( 6 )
+startHeight = 0.091
+tint = Color( 0, 0, 0, 1 )
+tintPercent = 0.0
+
+[sub_resource type="Gradient" id=8]
+offsets = PoolRealArray( 0.21645, 0.285714, 0.861472 )
+colors = PoolColorArray( 0.247059, 0.556863, 0.8, 1, 0.789063, 0.737483, 0.400696, 1, 0.372208, 0.550781, 0.479631, 1 )
+
+[sub_resource type="GradientTexture" id=9]
+gradient = SubResource( 8 )
+
+[sub_resource type="Resource" id=10]
+script = ExtResource( 4 )
+gradient = SubResource( 9 )
+startHeight = 0.344
+tint = Color( 0, 0, 0, 1 )
+tintPercent = 0.0
+
+[sub_resource type="Resource" id=11]
+script = ExtResource( 4 )
+gradient = SubResource( 6 )
+startHeight = 0.582
+tint = Color( 0, 0, 0, 1 )
+tintPercent = 0.0
+
+[sub_resource type="Gradient" id=12]
+offsets = PoolRealArray( 0.164502, 0.242424, 0.861472 )
+colors = PoolColorArray( 0.572433, 0.704447, 0.800781, 1, 0.41748, 0.535912, 0.59375, 1, 0.976563, 0.976563, 0.976563, 1 )
+
+[sub_resource type="GradientTexture" id=13]
+gradient = SubResource( 12 )
+
+[sub_resource type="Resource" id=14]
+script = ExtResource( 4 )
+gradient = SubResource( 13 )
+startHeight = 0.935
+tint = Color( 0, 0, 0, 1 )
+tintPercent = 0.0
+
+[sub_resource type="OpenSimplexNoise" id=15]
+seed = 1
+octaves = 6
+period = 0.9
+persistence = 0.554
+
+[sub_resource type="Resource" id=16]
 script = ExtResource( 2 )
 Enabled = true
-Noise = SubResource( 1 )
-Amplitude = 2.233
+Noise = SubResource( 15 )
+Amplitude = 0.453
+UseFirstLayerAsMask = false
+
+[sub_resource type="OpenSimplexNoise" id=17]
+seed = 28
+octaves = 8
+period = 0.1
+persistence = 0.788
+lacunarity = 2.08
+
+[sub_resource type="Resource" id=18]
+script = ExtResource( 2 )
+Enabled = true
+Noise = SubResource( 17 )
+Amplitude = 1.375
+UseFirstLayerAsMask = true
 
 [resource]
 script = ExtResource( 1 )
-Radius = 1.095
-Resolution = 10
-Noise = [ SubResource( 2 ) ]
-MinValue = 0.0
-Amplitude = 3.095
+disable_generation = true
+Radius = 200.0
+Resolution = 50
+Noise = [ SubResource( 16 ), SubResource( 18 ) ]
+MinValue = 0.038
+Material = ExtResource( 3 )
+Biomes = [ SubResource( 4 ), SubResource( 7 ), SubResource( 10 ), SubResource( 11 ), SubResource( 14 ) ]
+BiomeNoise = SubResource( 1 )
+BiomeNoiseAmplitude = 0.167
+BiomeNoiseOffset = -0.071
+blendAmount = 0.22

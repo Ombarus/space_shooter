@@ -10,6 +10,12 @@ var attractor := []
 
 var i := 0
 
+func _ready():
+	pass
+	
+func welcome_message_Callback(msg : String):
+	print(msg)
+
 func _unhandled_input(event):
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("touch"):

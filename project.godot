@@ -10,6 +10,11 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Resource",
+"class": "Biome",
+"language": "GDScript",
+"path": "res://scripts/pcg_planet/Biome.gd"
+}, {
+"base": "Resource",
 "class": "NoiseSettings",
 "language": "GDScript",
 "path": "res://scripts/NoiseSettings.gd"
@@ -17,9 +22,10 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "ShapeGenerator",
 "language": "GDScript",
-"path": "res://scripts/ShapeGenerator.gd"
+"path": "res://scripts/pcg_planet/ShapeGenerator.gd"
 } ]
 _global_script_class_icons={
+"Biome": "",
 "NoiseSettings": "",
 "ShapeGenerator": ""
 }
@@ -27,17 +33,19 @@ _global_script_class_icons={
 [application]
 
 config/name="Space Liero"
-run/main_scene="res://scenes/3DMain.tscn"
+run/main_scene="res://scenes/Visuals.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 BehaviorEvents="*res://scripts/autoload/BehaviorEvents.gd"
+Client="*res://scripts/autoload/Client.gd"
+Server="*res://scripts/autoload/Server.gd"
 
 [display]
 
-window/size/width=1280
-window/size/height=720
+window/size/width=1920
+window/size/height=1080
 
 [input]
 
