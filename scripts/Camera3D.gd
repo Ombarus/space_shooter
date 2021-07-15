@@ -1,6 +1,6 @@
 extends Camera
 
-onready var follow : Spatial = get_node("../Player")
+var follow : Spatial
 
 export(Vector3) var offset = Vector3(0.0, 50.0, 20.0)
 export(float) var zoom_speed = 100.0
@@ -11,6 +11,9 @@ func _ready():
 	prev_offset_y = offset.y
 
 func _process(delta):
+	if follow == null:
+		return
+		
 	translation = follow.translation
 	var new_offset_y = offset.y + follow.velocity.length() / 3.0
 	if abs(prev_offset_y - new_offset_y) > (zoom_speed * delta):

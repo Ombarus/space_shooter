@@ -1,14 +1,16 @@
 extends Control
 
-export(NodePath) onready var Follow = get_node(Follow)
+var follow_ref : Spatial
+export(NodePath) onready var Follow
 export(NodePath) onready var CameraRef = get_node(CameraRef)
 export(Vector2) var Offset : Vector2 = Vector2(0,0)
 
 func _ready():
-	pass
+	if has_node(Follow):
+		follow_ref = get_node(Follow)
 	
 func _process(delta):
-	if Follow == null:
+	if follow_ref == null:
 		return
 		
 	var screen_pos = CameraRef.unproject_position(Follow.global_transform.origin) + Offset
