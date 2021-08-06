@@ -1,9 +1,13 @@
-extends Node
+extends Spatial
 
 func _ready():
 	if not Server.is_server:
 		Server.rpc_id(1, "s_loading_done")
 		return
+	
+	# server doesn't need to have any visuals
+	if not Server.is_single_player:
+		visible = false
 	
 	if Server.waiting_for_player > 0:
 		BehaviorEvents.connect("OnAllPlayerDone", self, "OnAllPlayerDone_Callback")

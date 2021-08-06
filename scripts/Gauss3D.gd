@@ -1,9 +1,10 @@
 extends KinematicBody
 
 export(float) var lifetime_sec := 5.0
+export(float) var m_sec := 300.0
 
 var explosion = preload("res://scenes/Explosion3D.tscn")
-var velocity := Vector3(0,0,0)
+var dir := Vector3(0,0,-1)
 
 var cur_time := 0.0
 
@@ -17,7 +18,7 @@ func _physics_process(delta):
 		queue_free()
 		return
 		
-	var move : Vector3 = velocity * delta
+	var move : Vector3 = transform.basis.z * delta * m_sec
 	var start = self.translation
 	var end = start + move
 	var space_state = get_world().direct_space_state

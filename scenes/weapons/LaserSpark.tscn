@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=2]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.128713, 0.767327, 1 )
+colors = PoolColorArray( 1, 0.962114, 0.634006, 1, 1, 0.990234, 0, 1, 1, 0.0345821, 0.0345821, 1, 1, 0.0288184, 0.0288184, 0 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[sub_resource type="Curve" id=6]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.542553, 0.433282 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=7]
+width = 128
+curve = SubResource( 6 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 15.38
+scale_curve = SubResource( 7 )
+color_ramp = SubResource( 2 )
+
+[sub_resource type="SpatialMaterial" id=4]
+flags_transparent = true
+vertex_color_use_as_albedo = true
+params_blend_mode = 1
+emission_enabled = true
+emission = Color( 0.447059, 0.180392, 0.180392, 1 )
+emission_energy = 6.54
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="SphereMesh" id=5]
+material = SubResource( 4 )
+
+[node name="LaserSpark" type="Spatial"]
+
+[node name="Particles" type="Particles" parent="."]
+lifetime = 0.2
+process_material = SubResource( 3 )
+draw_pass_1 = SubResource( 5 )

@@ -3,11 +3,14 @@ extends Node
 var network := NetworkedMultiplayerENet.new()
 var port := 1909
 var max_players := 100
+var is_single_player := true
 var is_server := false
 var player_info := {}
 var waiting_for_player = 0
 
 func _ready():
+	if is_single_player:
+		is_server = true
 	if "--server" in OS.get_cmdline_args():
 		is_server = true
 		StartServer()

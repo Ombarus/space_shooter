@@ -4,9 +4,9 @@ var network := NetworkedMultiplayerENet.new()
 var ip := "127.0.0.1"
 var port := 1909
 
-var debug_local_server := true
+var debug_local_server := false
 var debug_server_pid = -1
-var debug_second_player := true
+var debug_second_player := false
 var debug_client_pid = -1
 
 func _ready():
@@ -15,12 +15,14 @@ func _ready():
 	
 	if is_debug_client:
 		OS.window_size = Vector2(640,480)
-		OS.window_position = Vector2(2432,200)
+		OS.window_position = Vector2(1900,5)
 		OS.set_window_title("Debug Client #2 : Space Liero")
 	if is_server:
 		OS.window_size = Vector2(640,480)
-		OS.window_position = Vector2(1920,200)
+		OS.window_position = Vector2(1900,800)
 		OS.set_window_title("Server : Space Liero")
+	if not is_server and not is_debug_client:
+		OS.window_position = Vector2(0,0)
 	
 	if not is_server:
 		BehaviorEvents.connect("OnServerConnected", self, "OnServerConnected_Callback")
@@ -81,4 +83,5 @@ remote func c_spawn(scene, parent, name):
 	
 remote func c_udpate_player(player_ref : String, t : Transform):
 	var player : Player3D = get_parent().find_node(player_ref, true, false)
-	player.transform = t
+	if player != null:
+		player.transform = t

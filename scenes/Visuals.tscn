@@ -1,5 +1,6 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
+[ext_resource path="res://scenes/Player3d.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/Camera3D.gd" type="Script" id=2]
 [ext_resource path="res://data/private/textures/space/fractal_test.png" type="Texture" id=3]
 [ext_resource path="res://data/private/models/space_corridor/scifi-corridor5.tscn" type="PackedScene" id=5]
@@ -346,3 +347,5 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2246, 0, 0 )
 
 [node name="2" type="Spatial" parent="SpawnPoints"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.472, 0, 0 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]

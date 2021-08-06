@@ -14,6 +14,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/pcg_planet/Biome.gd"
 }, {
+"base": "Spatial",
+"class": "Larpa",
+"language": "GDScript",
+"path": "res://scripts/weapons/Larpa.gd"
+}, {
+"base": "KinematicBody",
+"class": "LarpaTail",
+"language": "GDScript",
+"path": "res://scripts/weapons/Larpa_tail.gd"
+}, {
 "base": "Resource",
 "class": "NoiseSettings",
 "language": "GDScript",
@@ -31,6 +41,8 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Biome": "",
+"Larpa": "",
+"LarpaTail": "",
 "NoiseSettings": "",
 "Player3D": "",
 "ShapeGenerator": ""
