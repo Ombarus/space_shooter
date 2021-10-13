@@ -1,10 +1,13 @@
-extends Spatial
+extends BaseWeapon
 
 export var MaxDist := 10.0
 export var DamPerSec := 5.0
 
 var spark : Spatial = null
 var spark_scene = preload("res://scenes/weapons/LaserSpark.tscn")
+
+func IsHeld():
+	return true
 
 func _exit_tree():
 	if spark != null:

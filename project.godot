@@ -9,12 +9,17 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Spatial",
+"class": "BaseWeapon",
+"language": "GDScript",
+"path": "res://scripts/weapons/BaseWeapon.gd"
+}, {
 "base": "Resource",
 "class": "Biome",
 "language": "GDScript",
 "path": "res://scripts/pcg_planet/Biome.gd"
 }, {
-"base": "Spatial",
+"base": "BaseWeapon",
 "class": "Larpa",
 "language": "GDScript",
 "path": "res://scripts/weapons/Larpa.gd"
@@ -40,6 +45,7 @@ _global_script_classes=[ {
 "path": "res://scripts/pcg_planet/ShapeGenerator.gd"
 } ]
 _global_script_class_icons={
+"BaseWeapon": "",
 "Biome": "",
 "Larpa": "",
 "LarpaTail": "",

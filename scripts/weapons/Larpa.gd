@@ -1,4 +1,4 @@
-extends Spatial
+extends BaseWeapon
 class_name Larpa
 
 export(float) var m_sec := 30.0

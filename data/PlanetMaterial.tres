@@ -36,6 +36,6 @@ size = Vector2( 2048, 5 )
 
 [resource]
 shader = SubResource( 1 )
-shader_param/min_height = 190.0
-shader_param/max_height = 240.456
+shader_param/min_height = 2.0862
+shader_param/max_height = 2.6633
 shader_param/height_color = SubResource( 3 )

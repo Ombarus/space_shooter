@@ -122,7 +122,7 @@ func _physics_process(delta):
 		
 
 func fire(delta):
-	last_bullet = laser.instance()
+	last_bullet = larpa.instance()
 	
 	
 	var launch_vel : Vector3 = self.transform.basis.z * -1.0
@@ -142,6 +142,10 @@ func fire(delta):
 	else:
 		last_bullet.transform.origin = col.position
 		
+	get_node("..").call_deferred("add_child", last_bullet)
+	if !last_bullet.IsHeld():
+		last_bullet = null
+		
 	#if col:
 		#var e = n.explosion.instance()
 		#get_node("..").call_deferred("add_child", e)
@@ -149,9 +153,8 @@ func fire(delta):
 		#e.transform.origin = col.position
 		#n.queue_free()
 	#else:
-	get_node("..").call_deferred("add_child", last_bullet)
 
 func stop_fire():
-	if last_bullet != null:
+	if last_bullet != null and last_bullet.IsHeld():
 		last_bullet.queue_free()
 		last_bullet = null

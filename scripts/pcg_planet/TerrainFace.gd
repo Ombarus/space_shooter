@@ -124,7 +124,6 @@ func BiomePercentFromPoint(pointOnUnitSphere : Vector3) -> float:
 		biomeIndex *= (1 - weight)
 		biomeIndex += i * weight
 	return biomeIndex / max(1, numBiomes - 1);
-	#return 0.9999
 	
 func _update_mesh():
 	var _mesh := ArrayMesh.new()

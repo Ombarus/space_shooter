@@ -81,7 +81,7 @@ persistence = 0.554
 script = ExtResource( 2 )
 Enabled = true
 Noise = SubResource( 15 )
-Amplitude = 0.453
+Amplitude = 0.484
 UseFirstLayerAsMask = false
 
 [sub_resource type="OpenSimplexNoise" id=17]
@@ -95,19 +95,19 @@ lacunarity = 2.08
 script = ExtResource( 2 )
 Enabled = true
 Noise = SubResource( 17 )
-Amplitude = 1.375
+Amplitude = 0.916
 UseFirstLayerAsMask = true
 
 [resource]
 script = ExtResource( 1 )
-disable_generation = true
-Radius = 200.0
-Resolution = 50
+disable_generation = false
+Radius = 2.196
+Resolution = 57
 Noise = [ SubResource( 16 ), SubResource( 18 ) ]
 MinValue = 0.038
 Material = ExtResource( 3 )
 Biomes = [ SubResource( 4 ), SubResource( 7 ), SubResource( 10 ), SubResource( 11 ), SubResource( 14 ) ]
 BiomeNoise = SubResource( 1 )
-BiomeNoiseAmplitude = 0.167
+BiomeNoiseAmplitude = 0.169
 BiomeNoiseOffset = -0.071
 blendAmount = 0.22
