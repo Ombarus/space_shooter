@@ -4,9 +4,9 @@ var network := NetworkedMultiplayerENet.new()
 var ip := "127.0.0.1"
 var port := 1909
 
-var debug_local_server := false
+var debug_local_server := true
 var debug_server_pid = -1
-var debug_second_player := false
+var debug_second_player := true
 var debug_client_pid = -1
 
 func _ready():
@@ -76,12 +76,24 @@ remote func c_change_scene(scene):
 		
 	get_tree().change_scene(scene)
 
-remote func c_spawn(scene, parent, name):
-	var n = load(scene).instance()
+remote func c_spawn(scene, transform, name, parent, extra_param):
+	var n : Spatial = load(scene).instance()
 	n.name = str(name)
-	get_node(parent).call_deferred("add_child", n)
+	print("add child " + n.name + " to " + parent)
+	call_deferred("spawn_finalize", n, get_node(parent), transform)
 	
-remote func c_udpate_player(player_ref : String, t : Transform):
-	var player : Player3D = get_parent().find_node(player_ref, true, false)
-	if player != null:
-		player.transform = t
+func spawn_finalize(n : Spatial, r : Node, t : Transform):
+	r.add_child(n)
+	n.transform = t
+	
+remote func c_update_object(object_path : String, params : Array):
+	get_node(object_path).server_data_received(params)
+	
+#remote func c_udpate_player(player_ref : String, t : Transform, fired : bool, stopped : bool):
+#	var player : Player3D = get_parent().find_node(player_ref, true, false)
+#	if player != null:
+#		player.transform = t
+#		#if fired:
+#		#	player.fire(get_process_delta_time())
+#		if stopped:
+#			player.stop_fire()

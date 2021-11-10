@@ -3,7 +3,7 @@ extends Node
 var network := NetworkedMultiplayerENet.new()
 var port := 1909
 var max_players := 100
-var is_single_player := true
+var is_single_player := false
 var is_server := false
 var player_info := {}
 var waiting_for_player = 0
@@ -39,6 +39,7 @@ remote func s_get_welcome_message(requester, callback_name):
 	
 remote func s_loading_done():
 	var player : int = get_tree().get_rpc_sender_id()
+	print("player " + str(player) + " loading done")
 	player_info[player]["loading"] = false
 	waiting_for_player -= 1
 	if waiting_for_player == 0:
@@ -47,17 +48,23 @@ remote func s_loading_done():
 	
 
 remote func s_start_game():
+	print("Server starting launching game")
 	get_tree().change_scene("res://scenes/Visuals.tscn")
 	Client.rpc("c_change_scene", "res://scenes/Visuals.tscn")
 	waiting_for_player = player_info.size()
 	for player in player_info:
 		player_info[player]["loading"] = true
 		
-remote func s_update_input(touch : bool, ui_accept : bool, dir : Vector2, mouse_phi : float):
-	var player_id : int = get_tree().get_rpc_sender_id()
-	var player : Player3D = get_parent().find_node(str(player_id), true, false)
-	player.should_fire = touch
-	player.ui_accept = ui_accept
-	player.apply_force = Vector3(dir.x, 0.0, dir.y)
-	player.phi = mouse_phi
+# Maybe networked Object can ask the server for an ID and we use a dictionary so instead of passing a long string of paths we can just use custom IDs
+remote func s_update_object(object_path : String, params : Array):
+	get_node(object_path).client_data_received(params)
+		
+#remote func s_update_input(touch : bool, just_released : bool, ui_accept : bool, dir : Vector2, mouse_phi : float):
+#	var player_id : int = get_tree().get_rpc_sender_id()
+#	var player : Player3D = get_parent().find_node(str(player_id), true, false)
+#	player.should_fire = touch
+#	player.should_stop_fire = just_released
+#	player.ui_accept = ui_accept
+#	player.apply_force = Vector3(dir.x, 0.0, dir.y)
+#	player.phi = mouse_phi
 		

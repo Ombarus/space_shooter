@@ -27,15 +27,33 @@ func _ready():
 	if cam != null:
 		cam.follow = self
 		
+func client_data_received(params : Array):
+	if params[0] == 0: # player input
+		should_fire = params[1] # touch
+		should_stop_fire = params[2] #just_released
+		ui_accept = params[3] # ui_accept
+		apply_force = Vector3(params[4].x, 0.0, params[4].y) # dir
+		phi = params[5] # mouse_phi
+	
+func server_data_received(params : Array):
+	if params[0] == 0: # player position update
+		transform = params[1]
+		if params[2]: #stopped
+			stop_fire()
 	
 func _unhandled_input(event):
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("touch"):
 			should_fire = true
-		if event.is_action_released("touch"):
+		if event.is_action_released("touch") and last_bullet != null and last_bullet.IsHeld() == true:
 			should_stop_fire = true
 
-func _physics_process(delta):
+func _physics_process(delta):		
+	if last_bullet != null:
+		var launch_vel : Vector3 = self.transform.basis.z * -1.0
+		last_bullet.transform = get_node("gun").global_transform
+		last_bullet.transform.basis.z = launch_vel
+		
 	if not Server.is_server and cam == null:
 		return
 		
@@ -64,12 +82,15 @@ func _physics_process(delta):
 		var desired_heading_2d := player_pos_2d - cam_pos_2d
 		var phi_local : float = desired_heading_2d.angle_to(player_heading_2d)
 		
-		 #s_update_input(touch : bool, ui_accept : bool, dir : Vector2, mouse_phi : Vector2):
-		Server.rpc_unreliable_id(1, "s_update_input", 
+		#s_update_input(touch : bool, ui_accept : bool, dir : Vector2, mouse_phi : Vector2):
+		Server.rpc_unreliable_id(1, "s_update_object", self.get_path(), [
+			0, # player input
 			should_fire,
+			should_stop_fire,
 			Input.is_action_pressed("ui_accept"), 
 			apply_force_local,
-			phi_local)
+			phi_local
+		])
 		if not Server.is_single_player:
 			return
 		else:
@@ -105,25 +126,26 @@ func _physics_process(delta):
 	var offset = desired_z - self.rotation.z 
 	self.rotation.z += offset * delta * 20.0
 	
-	if last_bullet != null:
-		var launch_vel : Vector3 = self.transform.basis.z * -1.0
-		last_bullet.transform = get_node("gun").global_transform
-		last_bullet.transform.basis.z = launch_vel
-	
+	var fired := false
+	var stopped := false
 	if should_fire:
-		should_fire = false
-		fire(delta)
-		
+		fired = fire(delta)
 	if should_stop_fire:
-		should_stop_fire = false
-		stop_fire()
+		stopped = stop_fire()
 		
-	Client.rpc_unreliable("c_udpate_player", self.name, self.transform)
+	Client.rpc_unreliable("c_udpate_object", self.get_path(), [self.transform, fired, stopped])
 		
 
-func fire(delta):
+func fire(delta) -> bool:
+	if not Server.is_server:
+		return false
+	if last_bullet != null and last_bullet.IsHeld():
+		return false
+		
+	should_fire = false
 	last_bullet = larpa.instance()
 	
+	print("Spawn Bullet")
 	
 	var launch_vel : Vector3 = self.transform.basis.z * -1.0
 	#launch_vel += velocity
@@ -143,18 +165,20 @@ func fire(delta):
 		last_bullet.transform.origin = col.position
 		
 	get_node("..").call_deferred("add_child", last_bullet)
+		
+	Client.rpc("c_spawn", larpa.resource_path, last_bullet.transform, last_bullet.name, get_node("..").get_path(), [])
+	
 	if !last_bullet.IsHeld():
 		last_bullet = null
 		
-	#if col:
-		#var e = n.explosion.instance()
-		#get_node("..").call_deferred("add_child", e)
-		#e.Start(null)
-		#e.transform.origin = col.position
-		#n.queue_free()
-	#else:
-
-func stop_fire():
+	return true
+	
+	
+func stop_fire() -> bool:
+	print("stop fire")
+	should_stop_fire = false
 	if last_bullet != null and last_bullet.IsHeld():
 		last_bullet.queue_free()
 		last_bullet = null
+		return true
+	return false

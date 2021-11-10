@@ -22,9 +22,10 @@ func OnAllPlayerDone_Callback():
 	var index : int = 0
 	var spawn_root : Spatial = get_node("SpawnPoints")
 	for player in Server.player_info:
-		var n = scene.instance()
+		var n : Spatial = scene.instance()
 		n.name = str(player)
-		spawn_root.get_child(index).call_deferred("add_child", n)
+		n.global_transform = (spawn_root.get_child(index) as Spatial).global_transform
+		spawn_root.call_deferred("add_child", n)
 		print("server is spawning player %s" % [n.name])
-		Client.rpc("c_spawn", "res://scenes/Player3d.tscn", spawn_root.get_child(index).get_path(), player)
+		Client.rpc("c_spawn", "res://scenes/Player3d.tscn", n.transform, player, spawn_root.get_path(), [])
 		index += 1
