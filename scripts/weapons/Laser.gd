@@ -1,7 +1,7 @@
 extends BaseWeapon
 
 export var MaxDist := 10.0
-export var DamPerSec := 5.0
+export var DamPerSec := 20.0
 
 var spark : Spatial = null
 var spark_scene = preload("res://scenes/weapons/LaserSpark.tscn")
@@ -18,6 +18,9 @@ func server_data_received(params):
 		
 func get_init_data():
 	return []
+	
+func GetEnergyCost():
+	return 25.0 # per second?
 		
 func _physics_process(delta):
 	var space_state : PhysicsDirectSpaceState = get_world().direct_space_state
@@ -33,6 +36,8 @@ func _physics_process(delta):
 		norm.y = 0.0
 		var a : float = norm.angle_to(Vector3.RIGHT)
 		spark.rotation.y = a
+		if result.collider.has_method("damage"):
+			result.collider.damage(DamPerSec * delta)
 	elif spark != null:
 		spark.queue_free()
 		spark = null

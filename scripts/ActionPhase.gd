@@ -27,8 +27,10 @@ func OnAllPlayerDone_Callback():
 		n.global_transform = (spawn_root.get_child(index) as Spatial).global_transform
 		if index == 0:
 			n.cur_weapon = n.larpa
+			n.weapon_recharge_rate = 60.0
 		else:
 			n.cur_weapon = n.laser
+			n.weapon_recharge_rate = 40.0
 		spawn_root.call_deferred("add_child", n)
 		print("server is spawning player %s" % [n.name])
 		Client.rpc("c_spawn", "res://scenes/Player3d.tscn", n.transform, player, spawn_root.get_path())

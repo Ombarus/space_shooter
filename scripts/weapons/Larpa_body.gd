@@ -29,5 +29,6 @@ func _physics_process(delta : float):
 		get_node("../..").call_deferred("add_child", n)
 		n.Start(null)
 		n.transform.origin = col.position
-		BehaviorEvents.emit_signal("OnWeaponCollision", col.collider)
+		if col.collider.has_method("damage"):
+			col.collider.damage(10.0)
 		queue_free()

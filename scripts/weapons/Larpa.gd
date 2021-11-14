@@ -20,6 +20,9 @@ func server_data_received(params):
 func get_init_data():
 	return [0, rng.state]
 	
+func GetEnergyCost():
+	return 10.0
+	
 func _ready():
 	rng.randomize()
 	larpa_tail_scene = preload("res://scenes/weapons/LarpaTail.tscn")

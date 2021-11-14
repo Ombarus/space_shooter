@@ -3,6 +3,7 @@ class_name Player3D
 
 var velocity := Vector3()
 var cam : Camera
+var hud : HUD
 var gauss = preload("res://scenes/Gauss3D.tscn")
 var larpa = preload("res://scenes/weapons/Larpa.tscn")
 var laser = preload("res://scenes/weapons/Laser.tscn")
@@ -18,15 +19,32 @@ var ui_accept : bool = false
 var apply_force : Vector3 = Vector3.ZERO
 var phi : float
 
+var max_hp := 100.0
+var cur_hp := 100.0
+
+var weapon_max_energy := 100.0
+var weapon_cur_energy := 100.0
+var weapon_recharge_rate := 60.0
+var weapon_recharging := false
+
 var i := 0
 
 func _ready():
 	if not Server.is_server and get_tree().get_network_unique_id() != int(self.name):
+		var hud_to_copy = get_tree().root.find_node("HUD", true, false)
+		hud = hud_to_copy.duplicate()
+		hud_to_copy.get_parent().add_child(hud)
+		hud.follow_ref = self
 		return
 		
 	cam = get_tree().root.find_node("Camera", true, false)
 	if cam != null:
 		cam.follow = self
+		
+	hud = get_tree().root.find_node("HUD", true, false)
+	if hud != null:
+		hud.follow_ref = self
+	
 		
 func client_data_received(params : Array):
 	if params[0] == 0: # player input
@@ -38,6 +56,7 @@ func client_data_received(params : Array):
 func server_data_received(params : Array):
 	if params[0] == 0: # player position update
 		transform = params[1]
+		weapon_cur_energy = params[2]
 	elif params[0] == 1: # Spawn Object (probably should go in a spawn manager but this is just a prototype)
 		#larpa.resource_path, last_bullet.transform, last_bullet.get_path(), [0, last_bullet.rng.state]
 		var resource_path : String = params[1]
@@ -54,6 +73,8 @@ func server_data_received(params : Array):
 			last_bullet = null
 	elif params[0] == 2:
 		call_deferred("stop_bullet")
+	elif params[0] == 3:
+		cur_hp = params[1]
 
 func stop_bullet():
 	if last_bullet != null:
@@ -69,6 +90,10 @@ func stop_bullet():
 
 func _physics_process(delta):
 	if last_bullet != null:
+		weapon_cur_energy -= last_bullet.GetEnergyCost() * delta
+		if weapon_cur_energy <= 0.0:
+			weapon_cur_energy = 0.0
+			weapon_recharging = true
 		var launch_vel : Vector3 = self.transform.basis.z * -1.0
 		last_bullet.transform = get_node("gun").global_transform
 		last_bullet.transform.basis.z = launch_vel
@@ -146,13 +171,19 @@ func _physics_process(delta):
 	
 	var fired := false
 	var stopped := false
-	if fire_button and not prev_fire_button:
+	if fire_button and not prev_fire_button and not weapon_recharging:
 		fired = fire(delta)
-	if not fire_button and last_bullet != null and last_bullet.IsHeld() == true:
+	if (not fire_button or weapon_recharging) and last_bullet != null and last_bullet.IsHeld() == true:
 		stopped = stop_fire()
 		
+	if weapon_recharging:
+		weapon_cur_energy += weapon_recharge_rate * delta
+		if weapon_cur_energy >= weapon_max_energy:
+			weapon_cur_energy = weapon_max_energy
+			weapon_recharging = false
+		
 	prev_fire_button = fire_button
-	Client.rpc_unreliable("c_update_object", self.get_path(), [0, self.transform])
+	Client.rpc_unreliable("c_update_object", self.get_path(), [0, self.transform, self.weapon_cur_energy])
 		
 
 func fire(delta) -> bool:
@@ -162,8 +193,6 @@ func fire(delta) -> bool:
 		return false
 		
 	last_bullet = cur_weapon.instance()
-	
-	print("Spawn Bullet")
 	
 	var launch_vel : Vector3 = self.transform.basis.z * -1.0
 	#launch_vel += velocity
@@ -192,6 +221,10 @@ func fire(delta) -> bool:
 	#Client.rpc("c_spawn", larpa.resource_path, last_bullet.transform, last_bullet.name, get_node("..").get_path(), [])
 	
 	if !last_bullet.IsHeld():
+		weapon_cur_energy -= last_bullet.GetEnergyCost()
+		if weapon_cur_energy <= 0.0:
+			weapon_cur_energy = 0.0
+			weapon_recharging = true
 		last_bullet = null
 		
 	return true
@@ -204,3 +237,10 @@ func stop_fire() -> bool:
 		call_deferred("stop_bullet")
 		return true
 	return false
+	
+func damage(amount : float):
+	if Server.is_server:
+		print("DAMAGE : " + str(amount))
+		cur_hp -= amount
+		Client.rpc("c_update_object", self.get_path(), [3, cur_hp])
+	

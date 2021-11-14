@@ -11,15 +11,8 @@ onready var _hp : ColorRect = get_node("SafeArea/hp")
 var hp := 500.0
 
 func _ready():
-	BehaviorEvents.connect("OnWeaponCollision", self, "OnWeaponCollision_Callback")
 	_hp.rect_size.x = hp
 	
-func OnWeaponCollision_Callback(obj):
-	if obj == _pointer_ref:
-		hp -= 10.0
-		if hp <= 0.0:
-			hp = 500.0
-		_hp.rect_size.x = hp
 
 func _process(delta):
 	var cam : Camera = get_viewport().get_camera()
