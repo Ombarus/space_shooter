@@ -57,7 +57,8 @@ remote func s_start_game():
 		
 # Maybe networked Object can ask the server for an ID and we use a dictionary so instead of passing a long string of paths we can just use custom IDs
 remote func s_update_object(object_path : String, params : Array):
-	get_node(object_path).client_data_received(params)
+	if has_node(object_path):
+		get_node(object_path).client_data_received(params)
 		
 #remote func s_update_input(touch : bool, just_released : bool, ui_accept : bool, dir : Vector2, mouse_phi : float):
 #	var player_id : int = get_tree().get_rpc_sender_id()

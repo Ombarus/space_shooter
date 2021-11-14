@@ -13,6 +13,12 @@ func _exit_tree():
 	if spark != null:
 		spark.queue_free()
 
+func server_data_received(params):
+	pass
+		
+func get_init_data():
+	return []
+		
 func _physics_process(delta):
 	var space_state : PhysicsDirectSpaceState = get_world().direct_space_state
 	var end_point : Vector3 = self.translation + (self.global_transform.basis.z.normalized() * MaxDist)

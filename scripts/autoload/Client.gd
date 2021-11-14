@@ -76,7 +76,7 @@ remote func c_change_scene(scene):
 		
 	get_tree().change_scene(scene)
 
-remote func c_spawn(scene, transform, name, parent, extra_param):
+remote func c_spawn(scene, transform, name, parent):
 	var n : Spatial = load(scene).instance()
 	n.name = str(name)
 	print("add child " + n.name + " to " + parent)
@@ -87,7 +87,8 @@ func spawn_finalize(n : Spatial, r : Node, t : Transform):
 	n.transform = t
 	
 remote func c_update_object(object_path : String, params : Array):
-	get_node(object_path).server_data_received(params)
+	if has_node(object_path):
+		get_node(object_path).server_data_received(params)
 	
 #remote func c_udpate_player(player_ref : String, t : Transform, fired : bool, stopped : bool):
 #	var player : Player3D = get_parent().find_node(player_ref, true, false)

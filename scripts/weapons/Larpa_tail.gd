@@ -10,9 +10,6 @@ var dir := Vector3.ZERO
 
 func _ready():
 	pass
-	
-func server_param(param):
-	dir = param[0]
 
 func _physics_process(delta : float):
 	cur_time += delta

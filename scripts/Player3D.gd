@@ -6,9 +6,10 @@ var cam : Camera
 var gauss = preload("res://scenes/Gauss3D.tscn")
 var larpa = preload("res://scenes/weapons/Larpa.tscn")
 var laser = preload("res://scenes/weapons/Laser.tscn")
+var cur_weapon
 
-var should_fire = false
-var should_stop_fire = false
+var fire_button := false
+var prev_fire_button := false
 var last_bullet : Spatial = null
 
 var attractor := []
@@ -29,26 +30,44 @@ func _ready():
 		
 func client_data_received(params : Array):
 	if params[0] == 0: # player input
-		should_fire = params[1] # touch
-		should_stop_fire = params[2] #just_released
-		ui_accept = params[3] # ui_accept
-		apply_force = Vector3(params[4].x, 0.0, params[4].y) # dir
-		phi = params[5] # mouse_phi
+		fire_button = params[1] # touch
+		ui_accept = params[2] # ui_accept
+		apply_force = Vector3(params[3].x, 0.0, params[3].y) # dir
+		phi = params[4] # mouse_phi
 	
 func server_data_received(params : Array):
 	if params[0] == 0: # player position update
 		transform = params[1]
-		if params[2]: #stopped
-			stop_fire()
-	
-func _unhandled_input(event):
-	if event is InputEventMouseButton:
-		if event.is_action_pressed("touch"):
-			should_fire = true
-		if event.is_action_released("touch") and last_bullet != null and last_bullet.IsHeld() == true:
-			should_stop_fire = true
+	elif params[0] == 1: # Spawn Object (probably should go in a spawn manager but this is just a prototype)
+		#larpa.resource_path, last_bullet.transform, last_bullet.get_path(), [0, last_bullet.rng.state]
+		var resource_path : String = params[1]
+		var init_transform : Transform = params[2]
+		var spawn_path : NodePath = params[3]
+		var spawn_name : String = params[4]
+		var remote_init : Array = params[5]
+		last_bullet = load(resource_path).instance()
+		get_node(spawn_path).add_child(last_bullet)
+		last_bullet.name = spawn_name
+		last_bullet.transform = init_transform
+		last_bullet.server_data_received(remote_init)
+		if !last_bullet.IsHeld():
+			last_bullet = null
+	elif params[0] == 2:
+		call_deferred("stop_bullet")
 
-func _physics_process(delta):		
+func stop_bullet():
+	if last_bullet != null:
+		last_bullet.free()
+		last_bullet = null
+
+#func _unhandled_input(event):
+#	if event is InputEventMouseButton:
+#		if event.is_action_pressed("touch"):
+#			should_fire = true
+#		if event.is_action_released("touch") and last_bullet != null and last_bullet.IsHeld() == true:
+#			should_stop_fire = true
+
+func _physics_process(delta):
 	if last_bullet != null:
 		var launch_vel : Vector3 = self.transform.basis.z * -1.0
 		last_bullet.transform = get_node("gun").global_transform
@@ -85,8 +104,7 @@ func _physics_process(delta):
 		#s_update_input(touch : bool, ui_accept : bool, dir : Vector2, mouse_phi : Vector2):
 		Server.rpc_unreliable_id(1, "s_update_object", self.get_path(), [
 			0, # player input
-			should_fire,
-			should_stop_fire,
+			Input.is_action_pressed("touch"),
 			Input.is_action_pressed("ui_accept"), 
 			apply_force_local,
 			phi_local
@@ -128,12 +146,13 @@ func _physics_process(delta):
 	
 	var fired := false
 	var stopped := false
-	if should_fire:
+	if fire_button and not prev_fire_button:
 		fired = fire(delta)
-	if should_stop_fire:
+	if not fire_button and last_bullet != null and last_bullet.IsHeld() == true:
 		stopped = stop_fire()
 		
-	Client.rpc_unreliable("c_udpate_object", self.get_path(), [self.transform, fired, stopped])
+	prev_fire_button = fire_button
+	Client.rpc_unreliable("c_update_object", self.get_path(), [0, self.transform])
 		
 
 func fire(delta) -> bool:
@@ -142,8 +161,7 @@ func fire(delta) -> bool:
 	if last_bullet != null and last_bullet.IsHeld():
 		return false
 		
-	should_fire = false
-	last_bullet = larpa.instance()
+	last_bullet = cur_weapon.instance()
 	
 	print("Spawn Bullet")
 	
@@ -164,9 +182,14 @@ func fire(delta) -> bool:
 	else:
 		last_bullet.transform.origin = col.position
 		
-	get_node("..").call_deferred("add_child", last_bullet)
-		
-	Client.rpc("c_spawn", larpa.resource_path, last_bullet.transform, last_bullet.name, get_node("..").get_path(), [])
+	get_node("..").add_child(last_bullet)
+	
+	print(self.get_path())
+	Client.rpc("c_update_object", self.get_path(), [1, 
+		cur_weapon.resource_path, last_bullet.transform, last_bullet.get_parent().get_path(), last_bullet.name,
+		last_bullet.get_init_data()
+	])
+	#Client.rpc("c_spawn", larpa.resource_path, last_bullet.transform, last_bullet.name, get_node("..").get_path(), [])
 	
 	if !last_bullet.IsHeld():
 		last_bullet = null
@@ -176,9 +199,8 @@ func fire(delta) -> bool:
 	
 func stop_fire() -> bool:
 	print("stop fire")
-	should_stop_fire = false
 	if last_bullet != null and last_bullet.IsHeld():
-		last_bullet.queue_free()
-		last_bullet = null
+		Client.rpc("c_update_object", self.get_path(), [2])
+		call_deferred("stop_bullet")
 		return true
 	return false
