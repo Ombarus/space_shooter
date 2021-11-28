@@ -25,7 +25,7 @@ func GetEnergyCost():
 func _physics_process(delta):
 	var space_state : PhysicsDirectSpaceState = get_world().direct_space_state
 	var end_point : Vector3 = self.translation + (self.global_transform.basis.z.normalized() * MaxDist)
-	var result : Dictionary = space_state.intersect_ray(self.translation, end_point)
+	var result : Dictionary = space_state.intersect_ray(self.translation, end_point, [], pow(2,1))
 	if not result.empty():
 		end_point = result.position
 		if spark == null:

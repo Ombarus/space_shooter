@@ -63,7 +63,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Space Liero"
-run/main_scene="res://scenes/Launcher.tscn"
+run/main_scene="res://scenes/Login.tscn"
 config/icon="res://icon.png"
 
 [autoload]
@@ -121,8 +121,11 @@ full_screen={
 [layer_names]
 
 2d_physics/layer_1="Player"
+3d_physics/layer_1="World"
 2d_physics/layer_2="Player Weapon"
+3d_physics/layer_2="Weapon"
 2d_physics/layer_3="Enemy"
+3d_physics/layer_3="WeaponCol"
 2d_physics/layer_4="Enemy Weapon"
 2d_physics/layer_5="World"
 

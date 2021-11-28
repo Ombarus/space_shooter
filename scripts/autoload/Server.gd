@@ -60,6 +60,24 @@ remote func s_update_object(object_path : String, params : Array):
 	if has_node(object_path):
 		get_node(object_path).client_data_received(params)
 		
+remote func s_reset():
+	var spawn_node : Spatial = get_parent().find_node("SpawnPoints", true, false)
+	var objects_in_spawn = spawn_node.get_children()
+	var player_idx = 0
+	for obj in objects_in_spawn:
+		if obj.name == "1" or obj.name == "2":
+			continue
+		if obj is Player3D:
+			var p = obj as Player3D
+			obj.transform = (spawn_node.get_child(player_idx) as Spatial).transform
+			p.cur_hp = p.max_hp
+			p.weapon_cur_energy = p.weapon_max_energy
+			p.weapon_recharging = false
+			player_idx += 1
+		else:
+			obj.queue_free()
+			
+		
 #remote func s_update_input(touch : bool, just_released : bool, ui_accept : bool, dir : Vector2, mouse_phi : float):
 #	var player_id : int = get_tree().get_rpc_sender_id()
 #	var player : Player3D = get_parent().find_node(str(player_id), true, false)

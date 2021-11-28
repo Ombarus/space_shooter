@@ -17,6 +17,9 @@ height = 1.2
 script = ExtResource( 1 )
 
 [node name="KinematicBody" type="KinematicBody" parent="."]
+collision_layer = 2
+axis_lock_motion_y = true
+move_lock_y = true
 script = ExtResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="KinematicBody"]
@@ -25,6 +28,3 @@ material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="KinematicBody"]
 shape = SubResource( 2 )
-
-[node name="Camera" type="Camera" parent="."]
-transform = Transform( -1, 8.3144e-08, -2.70151e-08, 0, 0.309017, 0.951057, 8.74228e-08, 0.951057, -0.309017, 0, 30, 0 )

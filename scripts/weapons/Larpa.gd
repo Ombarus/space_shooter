@@ -4,8 +4,8 @@ class_name Larpa
 export(float) var m_sec := 30.0
 export(float) var lifetime_sec := 5.0
 export(float) var spawnrate_sec := 0.08
-export(float) var spawnangle_deg := 45
-export(float) var spawnangle_min_deg := 30
+export(float) var spawnangle_deg := 1
+export(float) var spawnangle_min_deg := 90
 
 var larpa_tail_scene : PackedScene
 var body : Spatial
@@ -44,7 +44,7 @@ func _process(delta : float):
 		rand_angle += deg2rad(spawnangle_min_deg) * sign(rand_angle)
 		var tail_dir = transform.basis.z * -1.0
 		tail_dir = tail_dir.rotated(Vector3.UP, rand_angle)
-		n.translation = get_node("KinematicBody").translation + Vector3.FORWARD# + (tail_dir * 5.0)
+		n.translation = get_node("KinematicBody").translation + Vector3.FORWARD# + (Vector3.UP * 5.0)
 		n.dir = tail_dir
 		
 		#Client.rpc("c_spawn", "res://scenes/weapons/LarpaTail.tscn", n.transform, n.name, get_path(), [tail_dir])

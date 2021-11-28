@@ -35,3 +35,7 @@ func OnAllPlayerDone_Callback():
 		print("server is spawning player %s" % [n.name])
 		Client.rpc("c_spawn", "res://scenes/Player3d.tscn", n.transform, player, spawn_root.get_path())
 		index += 1
+
+
+func _on_Button_pressed():
+	Server.rpc("s_reset")

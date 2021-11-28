@@ -101,8 +101,8 @@ UseFirstLayerAsMask = true
 [resource]
 script = ExtResource( 1 )
 disable_generation = false
-Radius = 2.196
-Resolution = 57
+Radius = 700.0
+Resolution = 120
 Noise = [ SubResource( 16 ), SubResource( 18 ) ]
 MinValue = 0.038
 Material = ExtResource( 3 )
