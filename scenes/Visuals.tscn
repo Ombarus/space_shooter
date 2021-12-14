@@ -224,7 +224,7 @@ shape = SubResource( 13 )
 [node name="Parcour" type="Spatial" parent="."]
 
 [node name="scifi-corridor9" parent="Parcour" instance=ExtResource( 5 )]
-transform = Transform( 0.0292476, 0, 0.999572, 0, 1, 0, -0.999572, 0, 0.0292476, -135.859, -1.19711, 159.376 )
+transform = Transform( 0.0716274, 0, 0.999572, 0, 1, 0, -2.44795, 0, 0.0292476, -135.859, -1.19711, 159.376 )
 
 [node name="StaticBody" type="StaticBody" parent="Parcour/scifi-corridor9"]
 
@@ -239,7 +239,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
 shape = SubResource( 13 )
 
 [node name="scifi-corridor10" parent="Parcour" instance=ExtResource( 5 )]
-transform = Transform( 0.474334, 0, 0.880345, 0, 1, 0, -0.880345, 0, 0.474334, -170.053, -1.19711, 143.477 )
+transform = Transform( 1.16164, 0, 0.880345, 0, 1, 0, -2.15596, 0, 0.474334, -170.053, -1.19711, 143.477 )
 
 [node name="StaticBody" type="StaticBody" parent="Parcour/scifi-corridor10"]
 
@@ -254,7 +254,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
 shape = SubResource( 13 )
 
 [node name="scifi-corridor11" parent="Parcour" instance=ExtResource( 5 )]
-transform = Transform( 0.912299, 0, 0.409525, 0, 1, 0, -0.409525, 0, 0.912299, -190.728, -1.19711, 107.488 )
+transform = Transform( 2.23422, 0, 0.409525, 0, 1, 0, -1.00293, 0, 0.912299, -190.728, -1.19711, 107.488 )
 
 [node name="StaticBody" type="StaticBody" parent="Parcour/scifi-corridor11"]
 
@@ -269,7 +269,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
 shape = SubResource( 13 )
 
 [node name="scifi-corridor12" parent="Parcour" instance=ExtResource( 5 )]
-transform = Transform( 0.989463, 0, -0.144788, 0, 1, 0, 0.144788, 0, 0.989463, -187.035, -1.19711, 68.3481 )
+transform = Transform( 2.42319, 0, -0.144788, 0, 1, 0, 0.354586, 0, 0.989463, -187.035, -1.19711, 68.3481 )
 
 [node name="StaticBody" type="StaticBody" parent="Parcour/scifi-corridor12"]
 

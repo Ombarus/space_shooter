@@ -4,8 +4,8 @@
 [ext_resource path="res://data/private/models/vorg_frigate/vorg_frigate_01.tscn" type="PackedScene" id=2]
 
 [sub_resource type="Curve" id=2]
-max_value = 5.0
-_data = [ Vector2( 0, 4.61657 ), 0.0, 0.0, 0, 0, Vector2( 0.0381166, 0.812883 ), -2.41429, -2.41429, 0, 0, Vector2( 1, 0.291411 ), -1.47755, 0.0, 0, 0 ]
+max_value = 3.0
+_data = [ Vector2( 0, 3.61963 ), -11.3941, -11.3443, 0, 0, Vector2( 1, 0.119632 ), -0.602126, 0.0, 0, 0 ]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 2.16787, 0.905997, 2.44627 )

@@ -145,32 +145,33 @@ func _physics_process(delta):
 			apply_force = Vector3(apply_force_local.x, 0.0, apply_force_local.y)
 		
 	var boost_str = 2.0
-	#if ui_accept:
-	#	var boost : Vector3 = self.transform.basis.z * -boost_str
-	#	velocity += boost
+	if ui_accept:
+		var boost : Vector3 = self.transform.basis.z * -boost_str
+		velocity += boost
 	
-	velocity = velocity / 1.01
+	# Only works because Physic tick is constant
+	velocity = velocity / 1.005
 	
 	var gravity = Vector3.ZERO
 	var attractors = get_tree().get_nodes_in_group("attractors")
 	for attractor in attractors:
 		gravity += attractor.get_gravity(self) * delta
+		
+	var velocity_fraction = velocity.length() / max_velocity
+	apply_force = input_power.interpolate(velocity_fraction) * apply_force.normalized()
 	
-	#apply_force *= base_str
-	
-	var velocity_fraction = velocity / max_velocity
-	apply_force.x = input_power.interpolate(abs(velocity_fraction.x)) * apply_force.x
-	apply_force.z = input_power.interpolate(abs(velocity_fraction.z)) * apply_force.z
-	if ui_accept:
-		apply_force += (boost_str * apply_force.normalized())
+	#if ui_accept:
+	#	apply_force += (boost_str * apply_force.normalized())
 		
 	var motion : Vector3 = velocity + apply_force + gravity
 	print(motion)
 	velocity = move_and_slide(motion, Vector3(0.0, 1.0, 0.0))
 	
-	velocity.x = clamp(velocity.x, -100.0, 100.0)
-	velocity.z = clamp(velocity.z, -100.0, 100.0)
+	#velocity.x = clamp(velocity.x, -100.0, 100.0)
+	#velocity.z = clamp(velocity.z, -100.0, 100.0)
 	velocity.y = 0.0
+	var clamped_vel : float = clamp(velocity.length(), 0.0, 100.0)
+	velocity = velocity.normalized() * clamped_vel
 	self.translation.y = 0.0
 	
 	var delta_phi = phi * delta * 3.0
