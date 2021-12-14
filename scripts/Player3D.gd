@@ -164,7 +164,7 @@ func _physics_process(delta):
 	#	apply_force += (boost_str * apply_force.normalized())
 		
 	var motion : Vector3 = velocity + apply_force + gravity
-	print(motion)
+	#print(motion)
 	velocity = move_and_slide(motion, Vector3(0.0, 1.0, 0.0))
 	
 	#velocity.x = clamp(velocity.x, -100.0, 100.0)
