@@ -6,19 +6,22 @@ export(float) var lifetime_sec := 5.0
 export(float) var spawnrate_sec := 0.08
 export(float) var spawnangle_deg := 1
 export(float) var spawnangle_min_deg := 90
+export(float) var self_harm_delay_sec := 0.4
 
 var larpa_tail_scene : PackedScene
 var body : Spatial
 var dir := Vector3(0,0,-1)
-var cur_time := 0.0
+var cur_time := -0.2 # delay spawn tail by 0.4 sec
 var rng := RandomNumberGenerator.new()
+var shooter : Node
 
 func server_data_received(params):
 	if params[0] == 0: # initialize on spawn
 		rng.state = params[1]
+		shooter = get_node(params[2])
 
 func get_init_data():
-	return [0, rng.state]
+	return [0, rng.state, shooter.get_path()]
 	
 func GetEnergyCost():
 	return 10.0

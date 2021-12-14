@@ -1,4 +1,4 @@
-extends KinematicBody
+extends Area
 
 onready var root_ref = get_node("..")
 
@@ -10,25 +10,21 @@ func _physics_process(delta : float):
 	if cur_time > root_ref.lifetime_sec:
 		queue_free()
 		return
+	
+	var colls : Array = get_overlapping_bodies()
+	if len(colls) > 0:
+		var hit_only_shooter = true
+		for col in colls:
+			if col != root_ref.shooter:
+				hit_only_shooter = false
+			if col.has_method("damage") and (col != root_ref.shooter || (cur_time > root_ref.self_harm_delay_sec)):
+				col.damage(10.0)
+		if not hit_only_shooter or cur_time > root_ref.self_harm_delay_sec:
+			var n = explosion.instance()
+			get_node("../..").add_child(n)
+			n.Start(null)
+			n.global_transform.origin = self.global_transform.origin
+			queue_free()
 		
 	var move : Vector3 = global_transform.basis.z * delta * root_ref.m_sec
-#	var start = self.translation
-#	var end = start + move
-#	var space_state = get_world().direct_space_state
-#	var col = space_state.intersect_ray(start, end)
-	
-	#if col.empty():
-	var col = move_and_collide(move)
-	#else:
-	#	self.transform.origin = col.position
-		
-	#move = move.rotated(get_parent().rotation)
-	#var col = move_and_collide(move)
-	if col:
-		var n = explosion.instance()
-		get_node("../..").call_deferred("add_child", n)
-		n.Start(null)
-		n.transform.origin = col.position
-		if col.collider.has_method("damage"):
-			col.collider.damage(10.0)
-		queue_free()
+	self.global_translate(move)

@@ -11,7 +11,7 @@ height = 0.6
 radial_segments = 6
 rings = 6
 
-[node name="LarpaTail" type="KinematicBody"]
+[node name="LarpaTail" type="Area"]
 collision_layer = 2
 script = ExtResource( 1 )
 

@@ -1,6 +1,9 @@
 extends KinematicBody
 class_name Player3D
 
+export var input_power : Curve
+export var max_velocity : float = 100.0
+
 var velocity := Vector3()
 var cam : Camera
 var hud : HUD
@@ -106,13 +109,13 @@ func _physics_process(delta):
 	if not Server.is_server or Server.is_single_player:
 		var apply_force_local := Vector2(0, 0)
 		if Input.is_action_pressed("ui_left"):
-			apply_force_local.x -= base_str
+			apply_force_local.x -= 1.0
 		if Input.is_action_pressed("ui_right"):
-			apply_force_local.x += base_str
+			apply_force_local.x += 1.0
 		if Input.is_action_pressed("ui_up"):
-			apply_force_local.y -= base_str
+			apply_force_local.y -= 1.0
 		if Input.is_action_pressed("ui_down"):
-			apply_force_local.y += base_str
+			apply_force_local.y += 1.0
 			
 		var mouse_pos : Vector2 = get_viewport().get_mouse_position()
 		var dir : Vector3 = cam.project_ray_normal(mouse_pos)
@@ -127,24 +130,24 @@ func _physics_process(delta):
 		var phi_local : float = desired_heading_2d.angle_to(player_heading_2d)
 		
 		#s_update_input(touch : bool, ui_accept : bool, dir : Vector2, mouse_phi : Vector2):
-		Server.rpc_unreliable_id(1, "s_update_object", self.get_path(), [
-			0, # player input
-			Input.is_action_pressed("touch"),
-			Input.is_action_pressed("ui_accept"), 
-			apply_force_local,
-			phi_local
-		])
 		if not Server.is_single_player:
+			Server.rpc_unreliable_id(1, "s_update_object", self.get_path(), [
+				0, # player input
+				Input.is_action_pressed("touch"),
+				Input.is_action_pressed("ui_accept"), 
+				apply_force_local,
+				phi_local
+			])
 			return
 		else:
 			phi = phi_local
 			ui_accept = Input.is_action_pressed("ui_accept")
-			apply_force = Vector3(apply_force_local.x, apply_force_local.y, 0.0)
+			apply_force = Vector3(apply_force_local.x, 0.0, apply_force_local.y)
 		
 	var boost_str = 2.0
-	if ui_accept:
-		var boost : Vector3 = self.transform.basis.z * -boost_str
-		velocity += boost
+	#if ui_accept:
+	#	var boost : Vector3 = self.transform.basis.z * -boost_str
+	#	velocity += boost
 	
 	velocity = velocity / 1.01
 	
@@ -153,7 +156,16 @@ func _physics_process(delta):
 	for attractor in attractors:
 		gravity += attractor.get_gravity(self) * delta
 	
+	#apply_force *= base_str
+	
+	var velocity_fraction = velocity / max_velocity
+	apply_force.x = input_power.interpolate(abs(velocity_fraction.x)) * apply_force.x
+	apply_force.z = input_power.interpolate(abs(velocity_fraction.z)) * apply_force.z
+	if ui_accept:
+		apply_force += (boost_str * apply_force.normalized())
+		
 	var motion : Vector3 = velocity + apply_force + gravity
+	print(motion)
 	velocity = move_and_slide(motion, Vector3(0.0, 1.0, 0.0))
 	
 	velocity.x = clamp(velocity.x, -100.0, 100.0)
@@ -183,7 +195,8 @@ func _physics_process(delta):
 			weapon_recharging = false
 		
 	prev_fire_button = fire_button
-	Client.rpc_unreliable("c_update_object", self.get_path(), [0, self.transform, self.weapon_cur_energy])
+	if not Server.is_single_player:
+		Client.rpc_unreliable("c_update_object", self.get_path(), [0, self.transform, self.weapon_cur_energy])
 		
 
 func fire(delta) -> bool:
@@ -199,6 +212,8 @@ func fire(delta) -> bool:
 	#n.velocity = launch_vel
 	last_bullet.transform = get_node("gun").global_transform
 	last_bullet.transform.basis.z = launch_vel
+	if "shooter" in last_bullet:
+		last_bullet.shooter = self
 	
 	var move : Vector3 = launch_vel * delta
 	var start = last_bullet.transform.origin
@@ -213,11 +228,11 @@ func fire(delta) -> bool:
 		
 	get_node("..").add_child(last_bullet)
 	
-	print(self.get_path())
-	Client.rpc("c_update_object", self.get_path(), [1, 
-		cur_weapon.resource_path, last_bullet.transform, last_bullet.get_parent().get_path(), last_bullet.name,
-		last_bullet.get_init_data()
-	])
+	if not Server.is_single_player:
+		Client.rpc("c_update_object", self.get_path(), [1, 
+			cur_weapon.resource_path, last_bullet.transform, last_bullet.get_parent().get_path(), last_bullet.name,
+			last_bullet.get_init_data()
+		])
 	#Client.rpc("c_spawn", larpa.resource_path, last_bullet.transform, last_bullet.name, get_node("..").get_path(), [])
 	
 	if !last_bullet.IsHeld():
@@ -231,16 +246,16 @@ func fire(delta) -> bool:
 	
 	
 func stop_fire() -> bool:
-	print("stop fire")
 	if last_bullet != null and last_bullet.IsHeld():
-		Client.rpc("c_update_object", self.get_path(), [2])
+		if not Server.is_single_player:
+			Client.rpc("c_update_object", self.get_path(), [2])
 		call_deferred("stop_bullet")
 		return true
 	return false
 	
 func damage(amount : float):
 	if Server.is_server:
-		print("DAMAGE : " + str(amount))
 		cur_hp -= amount
-		Client.rpc("c_update_object", self.get_path(), [3, cur_hp])
+		if not Server.is_single_player:
+			Client.rpc("c_update_object", self.get_path(), [3, cur_hp])
 	

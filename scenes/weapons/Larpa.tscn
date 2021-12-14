@@ -16,10 +16,8 @@ height = 1.2
 [node name="Larpa" type="Spatial"]
 script = ExtResource( 1 )
 
-[node name="KinematicBody" type="KinematicBody" parent="."]
+[node name="KinematicBody" type="Area" parent="."]
 collision_layer = 2
-axis_lock_motion_y = true
-move_lock_y = true
 script = ExtResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="KinematicBody"]

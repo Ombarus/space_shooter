@@ -1,13 +1,18 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripts/Player3D.gd" type="Script" id=1]
 [ext_resource path="res://data/private/models/vorg_frigate/vorg_frigate_01.tscn" type="PackedScene" id=2]
+
+[sub_resource type="Curve" id=2]
+max_value = 5.0
+_data = [ Vector2( 0, 4.61657 ), 0.0, 0.0, 0, 0, Vector2( 0.0381166, 0.812883 ), -2.41429, -2.41429, 0, 0, Vector2( 1, 0.291411 ), -1.47755, 0.0, 0, 0 ]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 2.16787, 0.905997, 2.44627 )
 
 [node name="Player" type="KinematicBody"]
 script = ExtResource( 1 )
+input_power = SubResource( 2 )
 
 [node name="Collision" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.654, 0.006 )

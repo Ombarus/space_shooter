@@ -29,7 +29,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/weapons/Larpa.gd"
 }, {
-"base": "KinematicBody",
+"base": "Area",
 "class": "LarpaTail",
 "language": "GDScript",
 "path": "res://scripts/weapons/Larpa_tail.gd"

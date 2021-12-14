@@ -3,7 +3,7 @@ extends Node
 var network := NetworkedMultiplayerENet.new()
 var port := 1909
 var max_players := 100
-var is_single_player := false
+var is_single_player := true
 var is_server := false
 var player_info := {}
 var waiting_for_player = 0
@@ -11,6 +11,7 @@ var waiting_for_player = 0
 func _ready():
 	if is_single_player:
 		is_server = true
+		player_info["single_player"] = {}
 	if "--server" in OS.get_cmdline_args():
 		is_server = true
 		StartServer()
@@ -24,7 +25,7 @@ func StartServer():
 	network.connect("peer_disconnected", self, "peer_disconnected_Callback")
 	
 func peer_connected_Callback(player_id):
-	player_info[player_id] = {}
+	player_info[player_id] = {"loading":false}
 	print("User %d Connected" % [player_id])
 	
 func peer_disconnected_Callback(player_id):
@@ -76,6 +77,7 @@ remote func s_reset():
 			player_idx += 1
 		else:
 			obj.queue_free()
+	Client.rpc("c_reset")
 			
 		
 #remote func s_update_input(touch : bool, just_released : bool, ui_accept : bool, dir : Vector2, mouse_phi : float):

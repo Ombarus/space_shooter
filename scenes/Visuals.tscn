@@ -221,11 +221,73 @@ shape = SubResource( 13 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
 shape = SubResource( 13 )
 
+[node name="Parcour" type="Spatial" parent="."]
+
+[node name="scifi-corridor9" parent="Parcour" instance=ExtResource( 5 )]
+transform = Transform( 0.0292476, 0, 0.999572, 0, 1, 0, -0.999572, 0, 0.0292476, -135.859, -1.19711, 159.376 )
+
+[node name="StaticBody" type="StaticBody" parent="Parcour/scifi-corridor9"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Parcour/scifi-corridor9/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.30132, 0, 13.6426 )
+shape = SubResource( 13 )
+
+[node name="StaticBody2" type="StaticBody" parent="Parcour/scifi-corridor9"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Parcour/scifi-corridor9/StaticBody2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
+shape = SubResource( 13 )
+
+[node name="scifi-corridor10" parent="Parcour" instance=ExtResource( 5 )]
+transform = Transform( 0.474334, 0, 0.880345, 0, 1, 0, -0.880345, 0, 0.474334, -170.053, -1.19711, 143.477 )
+
+[node name="StaticBody" type="StaticBody" parent="Parcour/scifi-corridor10"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Parcour/scifi-corridor10/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.30132, 0, 13.6426 )
+shape = SubResource( 13 )
+
+[node name="StaticBody2" type="StaticBody" parent="Parcour/scifi-corridor10"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Parcour/scifi-corridor10/StaticBody2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
+shape = SubResource( 13 )
+
+[node name="scifi-corridor11" parent="Parcour" instance=ExtResource( 5 )]
+transform = Transform( 0.912299, 0, 0.409525, 0, 1, 0, -0.409525, 0, 0.912299, -190.728, -1.19711, 107.488 )
+
+[node name="StaticBody" type="StaticBody" parent="Parcour/scifi-corridor11"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Parcour/scifi-corridor11/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.30132, 0, 13.6426 )
+shape = SubResource( 13 )
+
+[node name="StaticBody2" type="StaticBody" parent="Parcour/scifi-corridor11"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Parcour/scifi-corridor11/StaticBody2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
+shape = SubResource( 13 )
+
+[node name="scifi-corridor12" parent="Parcour" instance=ExtResource( 5 )]
+transform = Transform( 0.989463, 0, -0.144788, 0, 1, 0, 0.144788, 0, 0.989463, -187.035, -1.19711, 68.3481 )
+
+[node name="StaticBody" type="StaticBody" parent="Parcour/scifi-corridor12"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Parcour/scifi-corridor12/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.30132, 0, 13.6426 )
+shape = SubResource( 13 )
+
+[node name="StaticBody2" type="StaticBody" parent="Parcour/scifi-corridor12"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Parcour/scifi-corridor12/StaticBody2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
+shape = SubResource( 13 )
+
 [node name="Spatial2" type="Spatial" parent="."]
 transform = Transform( 0.664318, 0, -0.74745, 0, 1, 0, 0.74745, 0, 0.664318, 226.302, 0, 0 )
 
 [node name="scifi-corridor5" parent="Spatial2" instance=ExtResource( 5 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25.192, -1.19711, 0 )
+transform = Transform( 0.979498, -0.200627, -0.0182216, 0.200627, 0.963303, 0.178313, -0.0182216, -0.178313, 0.983805, -25.192, -6.86098, 1.52588e-05 )
 
 [node name="StaticBody" type="StaticBody" parent="Spatial2/scifi-corridor5"]
 
@@ -240,7 +302,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
 shape = SubResource( 13 )
 
 [node name="scifi-corridor8" parent="Spatial2" instance=ExtResource( 5 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25.192, -1.19711, 58.3905 )
+transform = Transform( 0.908425, 0.283275, -0.307441, -0.34307, 0.925402, -0.161042, 0.238887, 0.251768, 0.937841, -25.192, -1.19711, 58.3905 )
 
 [node name="StaticBody" type="StaticBody" parent="Spatial2/scifi-corridor8"]
 
@@ -342,9 +404,10 @@ transform = Transform( 26.083, 0, 0, 0, 9.412, 0, 0, 0, 12.123, 0, 0, 0.288769 )
 shape = ExtResource( 8 )
 
 [node name="RigidBody9" type="StaticBody" parent="."]
-transform = Transform( -0.718306, -0.421089, -1.63805, -1.28558, 1.29234, 0.231524, 1.099, 1.23653, -0.799797, -199.966, 0, 80.075 )
+transform = Transform( -0.718306, -0.421089, -1.63805, -1.28558, 1.29234, 0.231524, 1.099, 1.23653, -0.799797, -133.873, 0, 102.317 )
 
 [node name="asteroid2" parent="RigidBody9" instance=ExtResource( 6 )]
+transform = Transform( 1, -2.98023e-08, -5.96046e-08, 0, 1, 0, -2.98023e-08, 0, 1, 0, 0, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="RigidBody9"]
 transform = Transform( 26.083, 0, 0, 0, 9.412, 0, 0, 0, 12.123, 0, 0, 0.288769 )

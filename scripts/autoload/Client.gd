@@ -4,9 +4,9 @@ var network := NetworkedMultiplayerENet.new()
 var IP := "127.0.0.1"
 var PORT := 1909
 
-var debug_local_server := true
+var debug_local_server := false
 var debug_server_pid = -1
-var debug_second_player := true
+var debug_second_player := false
 var debug_client_pid = -1
 
 func _ready():
@@ -90,6 +90,23 @@ func spawn_finalize(n : Spatial, r : Node, t : Transform):
 remote func c_update_object(object_path : String, params : Array):
 	if has_node(object_path):
 		get_node(object_path).server_data_received(params)
+	
+remote func c_reset():
+	var spawn_node : Spatial = get_parent().find_node("SpawnPoints", true, false)
+	var objects_in_spawn = spawn_node.get_children()
+	var player_idx = 0
+	for obj in objects_in_spawn:
+		if obj.name == "1" or obj.name == "2":
+			continue
+		if obj is Player3D:
+			var p = obj as Player3D
+			obj.transform = (spawn_node.get_child(player_idx) as Spatial).transform
+			p.cur_hp = p.max_hp
+			p.weapon_cur_energy = p.weapon_max_energy
+			p.weapon_recharging = false
+			player_idx += 1
+		else:
+			obj.queue_free()
 	
 #remote func c_udpate_player(player_ref : String, t : Transform, fired : bool, stopped : bool):
 #	var player : Player3D = get_parent().find_node(player_ref, true, false)

@@ -32,7 +32,7 @@ func _ready():
 		return
 	if ShapeSource.disable_generation:
 		return
-	if !ShapeSource.is_connected("changed", self, "shapeSource_changed"):
+	if Engine.editor_hint and !ShapeSource.is_connected("changed", self, "shapeSource_changed"):
 		ShapeSource.connect("changed", self, "shapeSource_changed")
 	axisA = Vector3(localUp.y, localUp.z, localUp.x)
 	axisB = localUp.cross(axisA)

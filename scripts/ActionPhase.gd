@@ -8,6 +8,9 @@ func _ready():
 	# server doesn't need to have any visuals
 	if not Server.is_single_player:
 		visible = false
+		
+	#if Server.is_single_player:
+	#	OnAllPlayerDone_Callback()
 	
 	if Server.waiting_for_player > 0:
 		BehaviorEvents.connect("OnAllPlayerDone", self, "OnAllPlayerDone_Callback")
@@ -33,7 +36,8 @@ func OnAllPlayerDone_Callback():
 			n.weapon_recharge_rate = 40.0
 		spawn_root.call_deferred("add_child", n)
 		print("server is spawning player %s" % [n.name])
-		Client.rpc("c_spawn", "res://scenes/Player3d.tscn", n.transform, player, spawn_root.get_path())
+		if not Server.is_single_player:
+			Client.rpc("c_spawn", "res://scenes/Player3d.tscn", n.transform, player, spawn_root.get_path())
 		index += 1
 
 
