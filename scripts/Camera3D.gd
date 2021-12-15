@@ -23,11 +23,11 @@ func _process(delta):
 	translation.y = new_offset_y
 	prev_offset_y = new_offset_y
 	translation.z += offset.z
-	var new_offset_x = follow.transform.basis.z.x * follow.velocity.length() / 2.0
-	var new_offset_z = follow.transform.basis.z.z * follow.velocity.length() / 2.0
+	var new_offset_x = follow.transform.basis.z.x * follow.velocity.length() / 3.0
+	var new_offset_z = follow.transform.basis.z.z * follow.velocity.length() / 3.0
 	new_offset_x = prev_offset_x + ((new_offset_x-prev_offset_x) * 1.0 * delta)
 	new_offset_z = prev_offset_z + ((new_offset_z-prev_offset_z) * 1.0 * delta)
-	print("desired : %.3f, old : %.3f, new : %.3f" % [follow.transform.basis.z.x * follow.velocity.length() / 4.0, new_offset_x, prev_offset_x])
+	#print("desired : %.3f, old : %.3f, new : %.3f" % [follow.transform.basis.z.x * follow.velocity.length() / 4.0, new_offset_x, prev_offset_x])
 	translation.x -= new_offset_x
 	translation.z -= new_offset_z
 	prev_offset_x = new_offset_x

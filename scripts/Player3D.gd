@@ -33,6 +33,9 @@ var weapon_recharging := false
 var i := 0
 
 func _ready():
+	if has_node("vorg_frigate_01/Particles"):
+		get_node("vorg_frigate_01/Particles").local_coords = false
+	
 	if not Server.is_server and get_tree().get_network_unique_id() != int(self.name):
 		var hud_to_copy = get_tree().root.find_node("HUD", true, false)
 		hud = hud_to_copy.duplicate()
@@ -142,6 +145,7 @@ func _physics_process(delta):
 		else:
 			phi = phi_local
 			ui_accept = Input.is_action_pressed("ui_accept")
+			fire_button = Input.is_action_pressed("touch")
 			apply_force = Vector3(apply_force_local.x, 0.0, apply_force_local.y)
 		
 	var boost_str = 2.0
@@ -158,12 +162,12 @@ func _physics_process(delta):
 		gravity += attractor.get_gravity(self) * delta
 		
 	var velocity_fraction = velocity.length() / max_velocity
-	apply_force = input_power.interpolate(velocity_fraction) * apply_force.normalized()
+	var apply_force_power = input_power.interpolate(velocity_fraction) * apply_force.normalized()
 	
 	#if ui_accept:
 	#	apply_force += (boost_str * apply_force.normalized())
 		
-	var motion : Vector3 = velocity + apply_force + gravity
+	var motion : Vector3 = velocity + apply_force_power + gravity
 	#print(motion)
 	velocity = move_and_slide(motion, Vector3(0.0, 1.0, 0.0))
 	
