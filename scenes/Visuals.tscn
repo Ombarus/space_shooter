@@ -1,13 +1,16 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=27 format=2]
 
+[ext_resource path="res://scenes/sr_wormhole/wormhole.gd" type="Script" id=1]
 [ext_resource path="res://scripts/Camera3D.gd" type="Script" id=2]
 [ext_resource path="res://data/private/textures/space/fractal_test.png" type="Texture" id=3]
+[ext_resource path="res://scenes/sr_wormhole/wormhole.tscn" type="PackedScene" id=4]
 [ext_resource path="res://data/private/models/space_corridor/scifi-corridor5.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/Asteroid3d-2.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/Floating_HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://data/asteroid2_ConcavePolygonCol.tres" type="Shape" id=8]
 [ext_resource path="res://scenes/ProceduralPlanet.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scripts/ActionPhase.gd" type="Script" id=10]
+[ext_resource path="res://scripts/gravity3d.gd" type="Script" id=11]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
@@ -161,6 +164,7 @@ extents = Vector3( 100, 100, 100 )
 box_projection = true
 
 [node name="Spatial" type="Spatial" parent="."]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 22.5869, 0, -98.5503 )
 
 [node name="scifi-corridor5" parent="Spatial" instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25.192, -1.19711, 0 )
@@ -285,7 +289,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
 shape = SubResource( 13 )
 
 [node name="Spatial2" type="Spatial" parent="."]
-transform = Transform( 0.664318, 0, -0.74745, 0, 1, 0, 0.74745, 0, 0.664318, 226.302, 0, 0 )
+transform = Transform( 0.996477, 0, -1.12118, 0, 1.5, 0, 1.12118, 0, 0.996477, 234.315, 0, 63.117 )
 
 [node name="scifi-corridor5" parent="Spatial2" instance=ExtResource( 5 )]
 transform = Transform( 0.979498, -0.200627, -0.0182216, 0.200627, 0.963303, 0.178313, -0.0182216, -0.178313, 0.983805, -25.192, -6.86098, 1.52588e-05 )
@@ -333,7 +337,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.10854, 0, 13.6426 )
 shape = SubResource( 13 )
 
 [node name="RigidBody" type="StaticBody" parent="."]
-transform = Transform( 1.24143, -1.35266, 0.0751504, 1.01359, 0.995009, 1.16579, -0.898872, -0.746156, 1.41837, 55.7444, 0, 13.9143 )
+transform = Transform( 1.24143, -1.35266, 0.0751504, 1.01359, 0.995009, 1.16579, -0.898872, -0.746156, 1.41837, 39.3431, 0, 47.5131 )
 
 [node name="asteroid2" parent="RigidBody" instance=ExtResource( 6 )]
 
@@ -351,7 +355,7 @@ transform = Transform( 26.083, 0, 0, 0, 9.412, 0, 0, 0, 12.123, 0, 0, 0.288769 )
 shape = ExtResource( 8 )
 
 [node name="RigidBody3" type="StaticBody" parent="."]
-transform = Transform( 1.52021, 0, -1.0322, -0.264351, 1.77624, -0.389331, 0.997778, 0.470596, 1.46951, -86.3049, 0, -51.9004 )
+transform = Transform( 1.52021, 0, -1.0322, -0.264351, 1.77624, -0.389331, 0.997778, 0.470596, 1.46951, -113.402, 0, -100.294 )
 
 [node name="asteroid2" parent="RigidBody3" instance=ExtResource( 6 )]
 
@@ -360,7 +364,7 @@ transform = Transform( 26.083, 2.38419e-07, 4.76837e-07, 0, 9.412, -4.76837e-07,
 shape = ExtResource( 8 )
 
 [node name="RigidBody6" type="StaticBody" parent="."]
-transform = Transform( 1.52021, 0, -1.0322, -0.264351, 1.77624, -0.389331, 0.997778, 0.470596, 1.46951, 106.771, 0, 67.8582 )
+transform = Transform( 1.52021, 0, -1.0322, -0.264351, 1.77624, -0.389331, 0.997778, 0.470596, 1.46951, 151.563, 0, -17.2818 )
 
 [node name="asteroid2" parent="RigidBody6" instance=ExtResource( 6 )]
 
@@ -396,7 +400,7 @@ transform = Transform( 26.083, 0, 0, 0, 9.412, 0, 0, 0, 12.123, 0, 0, 0.288769 )
 shape = ExtResource( 8 )
 
 [node name="RigidBody5" type="StaticBody" parent="."]
-transform = Transform( 1.11725, 0.481882, -1.37696, -0.802118, 1.6516, -0.0728353, 1.21854, 0.645358, 1.21456, -122.057, 0, 17.9192 )
+transform = Transform( 1.11725, 0.481882, -1.37696, -0.802118, 1.6516, -0.0728353, 1.21854, 0.645358, 1.21456, -179.225, 0, -25.8121 )
 
 [node name="asteroid2" parent="RigidBody5" instance=ExtResource( 6 )]
 
@@ -420,12 +424,17 @@ transform = Transform( -0.42382, 0.905746, 0, -0.905746, -0.42382, 0, 0, 0, 1, -
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="CanvasLayer" instance=ExtResource( 7 )]
-margin_left = 529.167
-margin_top = 398.135
-margin_right = -1027.83
-margin_bottom = -528.865
+margin_right = -1557.0
+margin_bottom = -927.0
 CameraRef = NodePath("../../Camera")
 Offset = Vector2( 20, -30 )
+
+[node name="Node2D" parent="CanvasLayer" instance=ExtResource( 4 )]
+margin_right = 64.0
+margin_bottom = 64.0
+script = ExtResource( 1 )
+camera_ref = NodePath("../../Camera")
+follow_ref = NodePath("../../Wormhole")
 
 [node name="Button" type="Button" parent="CanvasLayer"]
 anchor_top = 1.0
@@ -450,19 +459,23 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.472, 0, 0 )
 [node name="StaticBody" type="StaticBody" parent="."]
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -144.517 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -204.963 )
 shape = SubResource( 14 )
 
 [node name="CollisionShape3" type="CollisionShape" parent="StaticBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 181.986 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 251.323 )
 shape = SubResource( 14 )
 
 [node name="CollisionShape2" type="CollisionShape" parent="StaticBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -230.199, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -282.309, 0, 0 )
 shape = SubResource( 15 )
 
 [node name="CollisionShape4" type="CollisionShape" parent="StaticBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 263.625, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 286.542, 0, 0 )
 shape = SubResource( 15 )
+
+[node name="Wormhole" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -24.4881, 1.52588e-05, 130.915 )
+script = ExtResource( 11 )
 
 [connection signal="pressed" from="CanvasLayer/Button" to="." method="_on_Button_pressed"]

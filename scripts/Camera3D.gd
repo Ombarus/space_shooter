@@ -20,6 +20,7 @@ func _process(delta):
 	var new_offset_y = offset.y + follow.velocity.length() / 1.0
 	if abs(prev_offset_y - new_offset_y) > (zoom_speed * delta):
 		new_offset_y = prev_offset_y + (zoom_speed * sign(new_offset_y - prev_offset_y) * delta)
+	#print(str(Server.is_server) + " : " + str(new_offset_y))
 	translation.y = new_offset_y
 	prev_offset_y = new_offset_y
 	translation.z += offset.z

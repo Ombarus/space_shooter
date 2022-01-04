@@ -24,8 +24,17 @@ func _process(delta):
 	get_node("VBoxContainer/HBoxContainer/Energy").value = follow_ref.weapon_cur_energy
 	
 	var screen_pos = camera_ref.unproject_position(follow_ref.global_transform.origin) + Offset
-	var vp_size = self.get_viewport().size
-	if get_viewport().is_size_override_enabled():
-		vp_size = get_viewport().get_size_override()
+	#var vp_size = self.get_viewport().size
+	#if get_viewport().is_size_override_enabled():
+	#	vp_size = get_viewport().get_size_override()
+		
+	for c in get_parent().get_children():
+		if c != self and "follow_ref" in c:
+			var target_pos = c.follow_ref.transform.origin
+			var my_pos = follow_ref.transform.origin
+			var target_dir = (target_pos - my_pos).normalized()
+			var pointer = get_node("EnemyPointer")
+			pointer.position = Vector2(target_dir.x, target_dir.z) * 140.0 - Offset
+			pointer.rotation = Vector2(0.0, -1.0).angle_to(Vector2(target_dir.x, target_dir.z))
 		
 	rect_position = screen_pos

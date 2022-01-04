@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/Player3D.gd" type="Script" id=1]
 [ext_resource path="res://data/private/models/vorg_frigate/vorg_frigate_01.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/jerg_scout_v2.tscn" type="PackedScene" id=3]
 
 [sub_resource type="Curve" id=2]
 max_value = 3.0
@@ -22,3 +23,6 @@ shape = SubResource( 1 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.561166, -3.22054 )
 
 [node name="vorg_frigate_01" parent="." instance=ExtResource( 2 )]
+
+[node name="jerg_scout_v2" parent="." instance=ExtResource( 3 )]
+visible = false

@@ -325,7 +325,7 @@ func new_arc(center : Vector2, vbegin : Vector2, angle_delta : float, color : Co
 	var tt : float = tt_begin
 	
 	var vi : int = _vertices.size()
-	print("Adding vertex : " + str(center))
+	#print("Adding vertex : " + str(center))
 	_vertices.append(to_vec3(center))
 	_colors.append(LineColor)
 	if TextureMode != LINE_TEXTURE_MODE.NONE:
@@ -335,7 +335,7 @@ func new_arc(center : Vector2, vbegin : Vector2, angle_delta : float, color : Co
 	for ti in range(0, steps, angle_step):
 		sc = Vector2(cos(t), sin(t))
 		rpos = center + sc * radius
-		print("Adding vertex : " + str(rpos))
+		#print("Adding vertex : " + str(rpos))
 		_vertices.append(to_vec3(rpos))
 		_colors.append(LineColor)
 		if TextureMode != LINE_TEXTURE_MODE.NONE:
@@ -345,7 +345,7 @@ func new_arc(center : Vector2, vbegin : Vector2, angle_delta : float, color : Co
 			
 	sc = Vector2(cos(end_angle), sin(end_angle))
 	rpos = center + sc * radius
-	print("Adding vertex : " + str(rpos))
+	#print("Adding vertex : " + str(rpos))
 	_vertices.append(to_vec3(rpos))
 	_colors.append(LineColor)
 	if TextureMode != LINE_TEXTURE_MODE.NONE:
@@ -366,10 +366,10 @@ func interpolate(var r : Rect2, var v : Vector2) -> Vector2:
 		
 func strip_begin(var up : Vector2, var down : Vector2, var uvx : float):
 	var vi : int = _vertices.size()
-	print("Adding vertex : " + str(up))
+	#print("Adding vertex : " + str(up))
 	_vertices.append(to_vec3(up))
 	_colors.append(LineColor)
-	print("Adding vertex : " + str(down))
+	#print("Adding vertex : " + str(down))
 	_vertices.append(to_vec3(down))
 	_colors.append(LineColor)
 	
@@ -404,10 +404,10 @@ func segment_intersection(var a : Vector2, var b : Vector2, var c : Vector2, var
 	
 func strip_add_quad(var up : Vector2, var down : Vector2, var uvx : float):
 	var vi : int = _vertices.size();
-	print("Adding vertex : " + str(up))
+	#print("Adding vertex : " + str(up))
 	_vertices.append(to_vec3(up))
 	_colors.append(LineColor)
-	print("Adding vertex : " + str(down))
+	#print("Adding vertex : " + str(down))
 	_vertices.append(to_vec3(down))
 	_colors.append(LineColor)
 
@@ -427,7 +427,7 @@ func strip_add_quad(var up : Vector2, var down : Vector2, var uvx : float):
 
 func strip_add_tri(var up : Vector2, var orientation):
 	var vi : int = _vertices.size()
-	print("Adding vertex : " + str(up))
+	#print("Adding vertex : " + str(up))
 	_vertices.append(to_vec3(up))
 	_colors.append(LineColor)
 	var opposite_orientation = ORIENTATION.DOWN if orientation == ORIENTATION.UP else ORIENTATION.UP

@@ -14,11 +14,11 @@ func _ready():
 func _process(delta):
 	var input := parent_player.apply_force
 	var input_str = input.length()
-	print(input_str)
+	#print(input_str)
 	reactor_ref.scale = Vector3(input_str, input_str, input_str)
 	
 	var new_p : Vector3 = trail_root.global_transform.origin
-	print("ship pos : " + str(new_p))
+	#print("ship pos : " + str(new_p))
 	#var new_p : Vector3 = trail_ref.transform.origin
 	if (tail_points.size() <= 0 or abs((tail_points[tail_points.size()-1] - new_p).length()) > 0.01):
 		tail_points.push_back(new_p)

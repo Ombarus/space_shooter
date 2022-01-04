@@ -26,5 +26,5 @@ func _physics_process(delta : float):
 			n.global_transform.origin = self.global_transform.origin
 			queue_free()
 		
-	var move : Vector3 = global_transform.basis.z * delta * root_ref.m_sec
+	var move : Vector3 = (global_transform.basis.z * delta * root_ref.m_sec) + (root_ref.extra_velocity * delta)
 	self.global_translate(move)

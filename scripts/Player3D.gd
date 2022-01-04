@@ -63,6 +63,7 @@ func server_data_received(params : Array):
 	if params[0] == 0: # player position update
 		transform = params[1]
 		weapon_cur_energy = params[2]
+		velocity = params[3]
 	elif params[0] == 1: # Spawn Object (probably should go in a spawn manager but this is just a prototype)
 		#larpa.resource_path, last_bullet.transform, last_bullet.get_path(), [0, last_bullet.rng.state]
 		var resource_path : String = params[1]
@@ -201,7 +202,7 @@ func _physics_process(delta):
 		
 	prev_fire_button = fire_button
 	if not Server.is_single_player:
-		Client.rpc_unreliable("c_update_object", self.get_path(), [0, self.transform, self.weapon_cur_energy])
+		Client.rpc_unreliable("c_update_object", self.get_path(), [0, self.transform, self.weapon_cur_energy, self.velocity])
 		
 
 func fire(delta) -> bool:
@@ -219,6 +220,9 @@ func fire(delta) -> bool:
 	last_bullet.transform.basis.z = launch_vel
 	if "shooter" in last_bullet:
 		last_bullet.shooter = self
+	if "extra_velocity" in last_bullet:
+		print(str(Server.is_server) + " : " + str(velocity))
+		last_bullet.extra_velocity = velocity
 	
 	var move : Vector3 = launch_vel * delta
 	var start = last_bullet.transform.origin

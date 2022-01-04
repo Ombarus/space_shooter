@@ -53,3 +53,7 @@ margin_left = 77.0
 margin_right = 117.0
 margin_bottom = 7.0
 rect_min_size = Vector2( 40, 0 )
+
+[node name="EnemyPointer" type="Polygon2D" parent="."]
+color = Color( 1, 0, 0, 1 )
+polygon = PoolVector2Array( -10, 0, 10, 0, 0, -30 )

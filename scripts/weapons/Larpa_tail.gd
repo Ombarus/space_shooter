@@ -5,7 +5,7 @@ var root_ref
 var explosion = preload("res://scenes/Explosion3D.tscn")
 var cur_time := 0.0
 var lifetime_sec := 5.0
-export(float) var tail_m_sec := 14.0
+export(float) var tail_m_sec := 30.0
 var dir := Vector3.ZERO
 
 func _ready():
