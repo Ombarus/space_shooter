@@ -3,7 +3,7 @@ extends Node
 var network := NetworkedMultiplayerENet.new()
 var port := 1909
 var max_players := 100
-var is_single_player := true
+var is_single_player := false
 var is_server := false
 var player_info := {}
 var waiting_for_player = 0
@@ -26,11 +26,16 @@ func StartServer():
 	
 func peer_connected_Callback(player_id):
 	player_info[player_id] = {"loading":false}
+	Client.rpc("c_update_player_info", player_info)
 	print("User %d Connected" % [player_id])
 	
 func peer_disconnected_Callback(player_id):
 	player_info.erase(player_id)
 	print("User %d Disconnected" % [player_id])
+	Client.rpc("c_update_player_info", player_info)
+	if player_info.size() <= 0:
+		print("All user disconnected. Returning to lobby.")
+		get_tree().change_scene("res://scenes/Server.tscn")
 
 remote func s_get_welcome_message(requester, callback_name):
 	var player_id : int = get_tree().get_rpc_sender_id()
@@ -42,6 +47,7 @@ remote func s_loading_done():
 	var player : int = get_tree().get_rpc_sender_id()
 	print("player " + str(player) + " loading done")
 	player_info[player]["loading"] = false
+	Client.rpc("c_update_player_info", player_info)
 	waiting_for_player -= 1
 	if waiting_for_player == 0:
 		print("all player done")
@@ -55,6 +61,7 @@ remote func s_start_game():
 	waiting_for_player = player_info.size()
 	for player in player_info:
 		player_info[player]["loading"] = true
+	Client.rpc("c_update_player_info", player_info)
 		
 # Maybe networked Object can ask the server for an ID and we use a dictionary so instead of passing a long string of paths we can just use custom IDs
 remote func s_update_object(object_path : String, params : Array):

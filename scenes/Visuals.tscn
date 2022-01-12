@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://scenes/sr_wormhole/wormhole.gd" type="Script" id=1]
 [ext_resource path="res://scripts/Camera3D.gd" type="Script" id=2]
@@ -113,6 +113,38 @@ height = 46.007
 
 [sub_resource type="BoxShape" id=13]
 extents = Vector3( 1, 10, 20 )
+
+[sub_resource type="Animation" id=16]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -115.076 ) ]
+}
+
+[sub_resource type="Animation" id=17]
+resource_name = "rotator"
+length = 360.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 360 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -115.076 ), Vector3( 0, 360, -115.076 ) ]
+}
 
 [sub_resource type="BoxShape" id=14]
 extents = Vector3( 300, 100, 1 )
@@ -421,6 +453,11 @@ shape = ExtResource( 8 )
 [node name="ProceduralPlanet" parent="." instance=ExtResource( 9 )]
 transform = Transform( -0.42382, 0.905746, 0, -0.905746, -0.42382, 0, 0, 0, 1, -525.64, -929.183, -323.598 )
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ProceduralPlanet"]
+autoplay = "rotator"
+anims/RESET = SubResource( 16 )
+anims/rotator = SubResource( 17 )
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="CanvasLayer" instance=ExtResource( 7 )]
@@ -451,10 +488,16 @@ __meta__ = {
 [node name="SpawnPoints" type="Spatial" parent="."]
 
 [node name="1" type="Spatial" parent="SpawnPoints"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -42.6861, 0, -60.5186 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -30.594, 0, -60.4549 )
 
 [node name="2" type="Spatial" parent="SpawnPoints"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.472, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 37.6064, 0, -7.88561 )
+
+[node name="3" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -95.3391, 0, -14.4905 )
+
+[node name="4" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -26.1032, 0, 63.3545 )
 
 [node name="StaticBody" type="StaticBody" parent="."]
 
@@ -475,7 +518,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 286.542, 0, 0 )
 shape = SubResource( 15 )
 
 [node name="Wormhole" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -24.4881, 1.52588e-05, 130.915 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 169.017, 4.57764e-05, 167.248 )
 script = ExtResource( 11 )
 
 [connection signal="pressed" from="CanvasLayer/Button" to="." method="_on_Button_pressed"]

@@ -1,8 +1,9 @@
 extends Node
 
 var network := NetworkedMultiplayerENet.new()
-var IP := "127.0.0.1"
+var DEBUG_IP := "127.0.0.1"
 var PORT := 1909
+var CLIENT_VERSION = "0.0.3"
 
 var debug_local_server := false
 var debug_server_pid = -1
@@ -34,7 +35,7 @@ func _ready():
 		if debug_second_player and not "no_debug_player" in OS.get_cmdline_args():
 			debug_client_pid = OS.execute(OS.get_executable_path(), ["no_debug_player"], false)
 	if not is_server and debug_local_server:
-		ConnectToServer(IP, PORT)
+		ConnectToServer(DEBUG_IP, PORT)
 	
 func _exit_tree():
 	if debug_server_pid >= 0:
@@ -45,6 +46,7 @@ func _exit_tree():
 		debug_client_pid = -1
 	
 func ConnectToServer(ip, port):
+	ip = IP.resolve_hostname(ip)
 	network.create_client(ip, port)
 	get_tree().set_network_peer(network)
 	
@@ -107,6 +109,10 @@ remote func c_reset():
 			player_idx += 1
 		else:
 			obj.queue_free()
+			
+remote func c_update_player_info(player_info):
+	Server.player_info = player_info
+	BehaviorEvents.emit_signal("PlayerInfoChanged")
 	
 #remote func c_udpate_player(player_ref : String, t : Transform, fired : bool, stopped : bool):
 #	var player : Player3D = get_parent().find_node(player_ref, true, false)
