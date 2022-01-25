@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://scenes/sr_wormhole/wormhole.gd" type="Script" id=1]
 [ext_resource path="res://scripts/Camera3D.gd" type="Script" id=2]
@@ -11,6 +11,32 @@
 [ext_resource path="res://scenes/ProceduralPlanet.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scripts/ActionPhase.gd" type="Script" id=10]
 [ext_resource path="res://scripts/gravity3d.gd" type="Script" id=11]
+
+[sub_resource type="Gradient" id=22]
+offsets = PoolRealArray( 0, 0.450226, 1 )
+colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 0.482353, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=23]
+gradient = SubResource( 22 )
+width = 128
+
+[sub_resource type="ParticlesMaterial" id=20]
+lifetime_randomness = 0.3
+emission_shape = 2
+emission_box_extents = Vector3( 30, 30, 1 )
+flag_rotate_y = true
+gravity = Vector3( 0, 0, 0 )
+angular_velocity = 40.32
+angular_velocity_random = 1.0
+color_ramp = SubResource( 23 )
+
+[sub_resource type="SpatialMaterial" id=24]
+flags_transparent = true
+vertex_color_use_as_albedo = true
+
+[sub_resource type="CubeMesh" id=21]
+material = SubResource( 24 )
+size = Vector3( 0.1, 0.1, 0.1 )
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
@@ -39,77 +65,6 @@ glow_intensity = 2.76
 glow_strength = 0.63
 glow_bloom = 0.18
 glow_blend_mode = 1
-
-[sub_resource type="SpatialMaterial" id=5]
-albedo_color = Color( 0.0588235, 0.192157, 0.054902, 1 )
-roughness = 0.37
-
-[sub_resource type="SphereMesh" id=6]
-material = SubResource( 5 )
-radius = 22.0
-height = 44.0
-
-[sub_resource type="VisualShaderNodeFresnel" id=7]
-default_input_values = [ 2, false, 3, 2.0 ]
-
-[sub_resource type="VisualShaderNodeScalarConstant" id=8]
-constant = 0.5
-
-[sub_resource type="VisualShaderNodeColorConstant" id=9]
-constant = Color( 0.164795, 0.589142, 0.84375, 1 )
-
-[sub_resource type="VisualShader" id=10]
-code = "shader_type spatial;
-render_mode specular_schlick_ggx;
-
-
-
-
-void vertex() {
-// Output:0
-
-}
-
-void fragment() {
-// Color:4
-	vec3 n_out4p0 = vec3(0.164795, 0.589142, 0.843750);
-	float n_out4p1 = 1.000000;
-
-// Fresnel:2
-	float n_in2p3 = 2.00000;
-	float n_out2p0 = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), n_in2p3);
-
-// Scalar:3
-	float n_out3p0 = 0.500000;
-
-// Output:0
-	ALBEDO = n_out4p0;
-	ALPHA = n_out2p0;
-	EMISSION = vec3(n_out3p0);
-
-}
-
-void light() {
-// Output:0
-
-}
-"
-graph_offset = Vector2( -299, 91 )
-nodes/fragment/2/node = SubResource( 7 )
-nodes/fragment/2/position = Vector2( -31, 251 )
-nodes/fragment/3/node = SubResource( 8 )
-nodes/fragment/3/position = Vector2( 83, 435 )
-nodes/fragment/4/node = SubResource( 9 )
-nodes/fragment/4/position = Vector2( 60, 160 )
-nodes/fragment/connections = PoolIntArray( 2, 0, 0, 1, 3, 0, 0, 5, 4, 0, 0, 0 )
-
-[sub_resource type="ShaderMaterial" id=11]
-shader = SubResource( 10 )
-
-[sub_resource type="SphereMesh" id=12]
-material = SubResource( 11 )
-radius = 22.944
-height = 46.007
 
 [sub_resource type="BoxShape" id=13]
 extents = Vector3( 1, 10, 20 )
@@ -149,6 +104,19 @@ tracks/0/keys = {
 [sub_resource type="BoxShape" id=14]
 extents = Vector3( 300, 100, 1 )
 
+[sub_resource type="CylinderMesh" id=18]
+height = 600.0
+radial_segments = 5
+rings = 10
+
+[sub_resource type="SpatialMaterial" id=19]
+params_blend_mode = 1
+emission_enabled = true
+emission = Color( 1.5, 0, 0, 1 )
+emission_energy = 16.0
+emission_operator = 0
+emission_on_uv2 = false
+
 [sub_resource type="BoxShape" id=15]
 extents = Vector3( 1, 100, 300 )
 
@@ -164,6 +132,13 @@ script = ExtResource( 2 )
 offset = Vector3( 0, 30, 10 )
 zoom_speed = 30.0
 
+[node name="Particles" type="Particles" parent="Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.32706, -19.4727 )
+amount = 1000
+local_coords = false
+process_material = SubResource( 20 )
+draw_pass_1 = SubResource( 21 )
+
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -67.805, 0 )
 visible = false
@@ -178,22 +153,6 @@ environment = SubResource( 4 )
 transform = Transform( 1, 0, 0, 0, -0.173648, 0.984808, 0, -0.984808, -0.173648, 0, 270.57, 0 )
 light_color = Color( 0.466667, 0.466667, 0.466667, 1 )
 shadow_enabled = true
-
-[node name="MeshInstance3" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -23.9872, -26.1189, 41.5654 )
-visible = false
-mesh = SubResource( 6 )
-material/0 = null
-
-[node name="MeshInstance2" type="MeshInstance" parent="MeshInstance3"]
-mesh = SubResource( 12 )
-material/0 = null
-
-[node name="ReflectionProbe" type="ReflectionProbe" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25.373, -2.733, 10.1325 )
-update_mode = 1
-extents = Vector3( 100, 100, 100 )
-box_projection = true
 
 [node name="Spatial" type="Spatial" parent="."]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 22.5869, 0, -98.5503 )
@@ -480,6 +439,8 @@ margin_left = 20.0
 margin_top = -52.0
 margin_right = 81.0
 margin_bottom = -16.0
+focus_mode = 0
+enabled_focus_mode = 0
 text = "Reset"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -505,17 +466,40 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -26.1032, 0, 63.3545 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -204.963 )
 shape = SubResource( 14 )
 
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody/CollisionShape"]
+transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0 )
+mesh = SubResource( 18 )
+material/0 = SubResource( 19 )
+
 [node name="CollisionShape3" type="CollisionShape" parent="StaticBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 251.323 )
 shape = SubResource( 14 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="StaticBody/CollisionShape3"]
+transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../../CollisionShape")
+material/0 = SubResource( 19 )
 
 [node name="CollisionShape2" type="CollisionShape" parent="StaticBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -282.309, 0, 0 )
 shape = SubResource( 15 )
 
+[node name="MeshInstance3" type="MeshInstance" parent="StaticBody/CollisionShape2"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../../CollisionShape")
+material/0 = SubResource( 19 )
+
 [node name="CollisionShape4" type="CollisionShape" parent="StaticBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 286.542, 0, 0 )
 shape = SubResource( 15 )
+
+[node name="MeshInstance3" type="MeshInstance" parent="StaticBody/CollisionShape4"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
+mesh = SubResource( 18 )
+skeleton = NodePath("../../CollisionShape")
+material/0 = SubResource( 19 )
 
 [node name="Wormhole" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 169.017, 4.57764e-05, 167.248 )

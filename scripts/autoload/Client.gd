@@ -3,7 +3,7 @@ extends Node
 var network := NetworkedMultiplayerENet.new()
 var DEBUG_IP := "127.0.0.1"
 var PORT := 1909
-var CLIENT_VERSION = "0.0.3"
+var CLIENT_VERSION = "0.0.4"
 
 var debug_local_server := false
 var debug_server_pid = -1
@@ -113,6 +113,7 @@ remote func c_reset():
 remote func c_update_player_info(player_info):
 	Server.player_info = player_info
 	BehaviorEvents.emit_signal("PlayerInfoChanged")
+
 	
 #remote func c_udpate_player(player_ref : String, t : Transform, fired : bool, stopped : bool):
 #	var player : Player3D = get_parent().find_node(player_ref, true, false)

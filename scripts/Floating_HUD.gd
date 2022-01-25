@@ -23,6 +23,13 @@ func _process(delta):
 	get_node("VBoxContainer/HBoxContainer/Energy").max_value = follow_ref.weapon_max_energy
 	get_node("VBoxContainer/HBoxContainer/Energy").value = follow_ref.weapon_cur_energy
 	
+	get_node("VBoxContainer/HBoxContainer2/Overheat").max_value = follow_ref.boost_max_energy
+	get_node("VBoxContainer/HBoxContainer2/Overheat").value = follow_ref.boost_cur_energy
+	if follow_ref.boost_overheat == true and follow_ref.boost_cur_energy <= 0.0:
+		get_node("VBoxContainer/HBoxContainer2/Overheat/AnimationPlayer").play("overheat")
+	else:
+		get_node("VBoxContainer/HBoxContainer2/Overheat/AnimationPlayer").play("RESET")
+	
 	var screen_pos = camera_ref.unproject_position(follow_ref.global_transform.origin) + Offset
 	#var vp_size = self.get_viewport().size
 	#if get_viewport().is_size_override_enabled():

@@ -3,7 +3,7 @@ extends Node
 var network := NetworkedMultiplayerENet.new()
 var port := 1909
 var max_players := 100
-var is_single_player := false
+var is_single_player := true
 var is_server := false
 var player_info := {}
 var waiting_for_player = 0
@@ -85,7 +85,7 @@ remote func s_reset():
 		else:
 			obj.queue_free()
 	Client.rpc("c_reset")
-			
+
 		
 #remote func s_update_input(touch : bool, just_released : bool, ui_accept : bool, dir : Vector2, mouse_phi : float):
 #	var player_id : int = get_tree().get_rpc_sender_id()

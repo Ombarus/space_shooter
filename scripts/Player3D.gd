@@ -30,6 +30,15 @@ var weapon_cur_energy := 100.0
 var weapon_recharge_rate := 60.0
 var weapon_recharging := false
 
+var boost_max_energy := 100.0
+var boost_cur_energy := 100.0
+var boost_cost := 50.0 # energy per second
+var boost_recharge_rate := 30.0 # second
+var boost_recharge_delay := 2.0 # second
+var boost_overheat_delay := 5.0 # second
+var boost_overheat := false
+var boost_counter := 0.0
+
 var i := 0
 
 func _ready():
@@ -64,6 +73,7 @@ func server_data_received(params : Array):
 		transform = params[1]
 		weapon_cur_energy = params[2]
 		velocity = params[3]
+		boost_cur_energy = params[4]
 	elif params[0] == 1: # Spawn Object (probably should go in a spawn manager but this is just a prototype)
 		#larpa.resource_path, last_bullet.transform, last_bullet.get_path(), [0, last_bullet.rng.state]
 		var resource_path : String = params[1]
@@ -149,10 +159,16 @@ func _physics_process(delta):
 			fire_button = Input.is_action_pressed("touch")
 			apply_force = Vector3(apply_force_local.x, 0.0, apply_force_local.y)
 		
-	var boost_str = 2.0
-	if ui_accept:
-		var boost : Vector3 = self.transform.basis.z * -boost_str
-		velocity += boost
+	var velocity_fraction = velocity.length() / max_velocity
+	var boost_str = 5.0
+	var boost : Vector3  = Vector3.ZERO
+	if ui_accept and boost_cur_energy > 0.0 and not boost_overheat:
+		boost_str = input_power.interpolate(velocity_fraction) * boost_str
+		boost = self.transform.basis.z * -boost_str
+		boost_counter = 0.0
+		boost_cur_energy -= boost_cost * delta
+		
+	update_boost_energy(delta)
 	
 	# Only works because Physic tick is constant
 	velocity = velocity / 1.005
@@ -162,13 +178,12 @@ func _physics_process(delta):
 	for attractor in attractors:
 		gravity += attractor.get_gravity(self) * delta
 		
-	var velocity_fraction = velocity.length() / max_velocity
-	var apply_force_power = input_power.interpolate(velocity_fraction) * apply_force.normalized()
+	var apply_force_power = (input_power.interpolate(velocity_fraction) * apply_force.normalized())
 	
 	#if ui_accept:
 	#	apply_force += (boost_str * apply_force.normalized())
 		
-	var motion : Vector3 = velocity + apply_force_power + gravity
+	var motion : Vector3 = velocity + ((apply_force_power + gravity + boost) / 5.0)
 	#print(motion)
 	velocity = move_and_slide(motion, Vector3(0.0, 1.0, 0.0))
 	
@@ -202,7 +217,9 @@ func _physics_process(delta):
 		
 	prev_fire_button = fire_button
 	if not Server.is_single_player:
-		Client.rpc_unreliable("c_update_object", self.get_path(), [0, self.transform, self.weapon_cur_energy, self.velocity])
+		Client.rpc_unreliable("c_update_object", self.get_path(), [
+			0, self.transform, self.weapon_cur_energy, 
+			self.velocity, self.boost_cur_energy])
 		
 
 func fire(delta) -> bool:
@@ -221,7 +238,6 @@ func fire(delta) -> bool:
 	if "shooter" in last_bullet:
 		last_bullet.shooter = self
 	if "extra_velocity" in last_bullet:
-		print(str(Server.is_server) + " : " + str(velocity))
 		last_bullet.extra_velocity = velocity
 	
 	var move : Vector3 = launch_vel * delta
@@ -268,3 +284,14 @@ func damage(amount : float):
 		if not Server.is_single_player:
 			Client.rpc("c_update_object", self.get_path(), [3, cur_hp])
 	
+func update_boost_energy(delta):
+	boost_counter += delta
+	if boost_cur_energy <= 0.0 and not boost_overheat:
+		boost_cur_energy = 0.0
+		boost_overheat = true
+	
+	if boost_overheat and boost_counter > boost_overheat_delay:
+		boost_overheat = false
+	if not boost_overheat and boost_counter > boost_recharge_delay: # assume boost_recharge_delay is = or < than boost_overheat_delay
+		boost_cur_energy += boost_recharge_rate * delta
+		boost_cur_energy = min(boost_cur_energy, boost_max_energy)
