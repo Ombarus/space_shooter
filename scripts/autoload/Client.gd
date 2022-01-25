@@ -5,9 +5,9 @@ var DEBUG_IP := "127.0.0.1"
 var PORT := 1909
 var CLIENT_VERSION = "0.0.4"
 
-var debug_local_server := false
+var debug_local_server := true
 var debug_server_pid = -1
-var debug_second_player := false
+var debug_second_player := true
 var debug_client_pid = -1
 
 func _ready():

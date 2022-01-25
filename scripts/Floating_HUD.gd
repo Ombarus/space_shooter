@@ -16,19 +16,26 @@ func _ready():
 func _process(delta):
 	if follow_ref == null or camera_ref == null:
 		return
+		
+	var local_player : bool = follow_ref.cam != null
 	
 	get_node("VBoxContainer/Hull").max_value = follow_ref.max_hp
 	get_node("VBoxContainer/Hull").value = follow_ref.cur_hp
 	
-	get_node("VBoxContainer/HBoxContainer/Energy").max_value = follow_ref.weapon_max_energy
-	get_node("VBoxContainer/HBoxContainer/Energy").value = follow_ref.weapon_cur_energy
+	if local_player:
+		get_node("VBoxContainer/HBoxContainer/Energy").max_value = follow_ref.weapon_max_energy
+		get_node("VBoxContainer/HBoxContainer/Energy").value = follow_ref.weapon_cur_energy
 	
-	get_node("VBoxContainer/HBoxContainer2/Overheat").max_value = follow_ref.boost_max_energy
-	get_node("VBoxContainer/HBoxContainer2/Overheat").value = follow_ref.boost_cur_energy
-	if follow_ref.boost_overheat == true and follow_ref.boost_cur_energy <= 0.0:
-		get_node("VBoxContainer/HBoxContainer2/Overheat/AnimationPlayer").play("overheat")
+		get_node("VBoxContainer/HBoxContainer2/Overheat").max_value = follow_ref.boost_max_energy
+		get_node("VBoxContainer/HBoxContainer2/Overheat").value = follow_ref.boost_cur_energy
+		if follow_ref.boost_cur_energy <= 0.0:
+			get_node("VBoxContainer/HBoxContainer2/Overheat/AnimationPlayer").play("overheat")
+		else:
+			get_node("VBoxContainer/HBoxContainer2/Overheat/AnimationPlayer").play("RESET")
 	else:
-		get_node("VBoxContainer/HBoxContainer2/Overheat/AnimationPlayer").play("RESET")
+		get_node("VBoxContainer/HBoxContainer/Energy").visible = false
+		get_node("VBoxContainer/HBoxContainer2/Overheat").visible = false
+		get_node("EnemyPointer").visible = false
 	
 	var screen_pos = camera_ref.unproject_position(follow_ref.global_transform.origin) + Offset
 	#var vp_size = self.get_viewport().size

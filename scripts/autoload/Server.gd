@@ -3,7 +3,7 @@ extends Node
 var network := NetworkedMultiplayerENet.new()
 var port := 1909
 var max_players := 100
-var is_single_player := true
+var is_single_player := false
 var is_server := false
 var player_info := {}
 var waiting_for_player = 0

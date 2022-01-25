@@ -7,10 +7,11 @@ export var max_velocity : float = 100.0
 var velocity := Vector3()
 var cam : Camera
 var hud : HUD
-var gauss = preload("res://scenes/Gauss3D.tscn")
+var gauss = preload("res://scenes/weapons/Gauss3D.tscn")
 var larpa = preload("res://scenes/weapons/Larpa.tscn")
 var laser = preload("res://scenes/weapons/Laser.tscn")
-var cur_weapon
+var weapon_list = [larpa, laser, gauss]
+var cur_weapon_index = 0
 
 var fire_button := false
 var prev_fire_button := false
@@ -27,15 +28,15 @@ var cur_hp := 100.0
 
 var weapon_max_energy := 100.0
 var weapon_cur_energy := 100.0
-var weapon_recharge_rate := 60.0
+var weapon_recharge_rate := [60.0, 40.0, 25.0] # can't put it in the weapon scene since I don't have a bullet to reference (make it a perm resource?)
 var weapon_recharging := false
 
 var boost_max_energy := 100.0
 var boost_cur_energy := 100.0
 var boost_cost := 50.0 # energy per second
 var boost_recharge_rate := 30.0 # second
-var boost_recharge_delay := 2.0 # second
-var boost_overheat_delay := 5.0 # second
+var boost_recharge_delay := 1.5 # second
+var boost_overheat_delay := 3.0 # second
 var boost_overheat := false
 var boost_counter := 0.0
 
@@ -67,6 +68,7 @@ func client_data_received(params : Array):
 		ui_accept = params[2] # ui_accept
 		apply_force = Vector3(params[3].x, 0.0, params[3].y) # dir
 		phi = params[4] # mouse_phi
+		cur_weapon_index = (cur_weapon_index + params[5]) % weapon_list.size() # mouse wheel (weapon_next, weapon_prev)
 	
 func server_data_received(params : Array):
 	if params[0] == 0: # player position update
@@ -106,6 +108,10 @@ func stop_bullet():
 #			should_stop_fire = true
 
 func _physics_process(delta):
+	if not Server.is_server and cam == null:
+		return
+		
+		
 	if last_bullet != null:
 		weapon_cur_energy -= last_bullet.GetEnergyCost() * delta
 		if weapon_cur_energy <= 0.0:
@@ -114,10 +120,7 @@ func _physics_process(delta):
 		var launch_vel : Vector3 = self.transform.basis.z * -1.0
 		last_bullet.transform = get_node("gun").global_transform
 		last_bullet.transform.basis.z = launch_vel
-		
-	if not Server.is_server and cam == null:
-		return
-		
+				
 	var base_str = 0.35
 		
 	if not Server.is_server or Server.is_single_player:
@@ -145,12 +148,18 @@ func _physics_process(delta):
 		
 		#s_update_input(touch : bool, ui_accept : bool, dir : Vector2, mouse_phi : Vector2):
 		if not Server.is_single_player:
+			var weapon_wheel : int = 0
+			if Input.is_action_just_pressed("next_weapon"):
+				weapon_wheel += 1
+			elif Input.is_action_just_pressed("prev_weapon"):
+				weapon_wheel -= 1
 			Server.rpc_unreliable_id(1, "s_update_object", self.get_path(), [
 				0, # player input
 				Input.is_action_pressed("touch"),
 				Input.is_action_pressed("ui_accept"), 
 				apply_force_local,
-				phi_local
+				phi_local,
+				weapon_wheel
 			])
 			return
 		else:
@@ -178,7 +187,11 @@ func _physics_process(delta):
 	for attractor in attractors:
 		gravity += attractor.get_gravity(self) * delta
 		
-	var apply_force_power = (input_power.interpolate(velocity_fraction) * apply_force.normalized())
+	var velocity_fraction_vector = velocity / max_velocity
+	# do it per axis to make it easier to change direction but difficult to slow down
+	var apply_force_power_x = (input_power.interpolate(velocity_fraction_vector.x) * apply_force.normalized().x)
+	var apply_force_power_z = (input_power.interpolate(velocity_fraction_vector.z) * apply_force.normalized().z)
+	var apply_force_power = Vector3(apply_force_power_x, 0.0, apply_force_power_z)
 	
 	#if ui_accept:
 	#	apply_force += (boost_str * apply_force.normalized())
@@ -210,7 +223,7 @@ func _physics_process(delta):
 		stopped = stop_fire()
 		
 	if weapon_recharging:
-		weapon_cur_energy += weapon_recharge_rate * delta
+		weapon_cur_energy += weapon_recharge_rate[cur_weapon_index] * delta
 		if weapon_cur_energy >= weapon_max_energy:
 			weapon_cur_energy = weapon_max_energy
 			weapon_recharging = false
@@ -228,7 +241,7 @@ func fire(delta) -> bool:
 	if last_bullet != null and last_bullet.IsHeld():
 		return false
 		
-	last_bullet = cur_weapon.instance()
+	last_bullet = weapon_list[cur_weapon_index].instance()
 	
 	var launch_vel : Vector3 = self.transform.basis.z * -1.0
 	#launch_vel += velocity
@@ -255,7 +268,7 @@ func fire(delta) -> bool:
 	
 	if not Server.is_single_player:
 		Client.rpc("c_update_object", self.get_path(), [1, 
-			cur_weapon.resource_path, last_bullet.transform, last_bullet.get_parent().get_path(), last_bullet.name,
+			weapon_list[cur_weapon_index].resource_path, last_bullet.transform, last_bullet.get_parent().get_path(), last_bullet.name,
 			last_bullet.get_init_data()
 		])
 	#Client.rpc("c_spawn", larpa.resource_path, last_bullet.transform, last_bullet.name, get_node("..").get_path(), [])
